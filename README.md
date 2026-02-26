@@ -2,7 +2,7 @@
   <img src="https://angular.dev/assets/images/press-kit/angular_icon_gradient.gif" alt="Angular Logo" width="80" />
 </p>
 
-<h1 align="center">🚀 Willbert Budi Lian — Portfolio</h1>
+<h1 align="center">🚀 Willbert Budi Lian's Portfolio</h1>
 
 <p align="center">
   <strong>A modern, performant, and accessible personal portfolio website built with Angular 21.</strong>
@@ -29,7 +29,7 @@
 | Feature | Description |
 |---|---|
 | 🎨 **Dark / Light Theme** | Seamless theme switcher with persistent preference via `ThemeService` |
-| 🖥️ **Responsive Design** | Fully responsive layout built with Tailwind CSS — mobile to desktop |
+| 🖥️ **Responsive Design** | Fully responsive layout built with Tailwind CSS mobile to desktop |
 | 🎬 **Scroll Animations** | Smooth reveal animations powered by GSAP `ScrollTrigger` |
 | ⌨️ **Keyboard Navigation** | Full accessibility with keyboard shortcuts for section navigation |
 | 🧩 **Component Architecture** | Modular, standalone Angular components with `OnPush` change detection |
@@ -48,8 +48,7 @@
 - **Animations:** [GSAP 3](https://gsap.com) (GreenSock Animation Platform)
 
 ### Libraries
-- **Icons:** [Iconify](https://iconify.design) + [Lumina Design Iconify](https://www.npmjs.com/package/@lumina-design/iconify)
-- **UI Kit:** [@lumina-design/core](https://www.npmjs.com/package/@lumina-design/core)
+- **Icons:** [Iconify](https://iconify.design)
 - **RxJS:** Reactive programming for services
 
 ### Dev & Tooling
