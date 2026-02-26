@@ -23,10 +23,20 @@ export interface SocialLink {
     readonly svgPath: string;
 }
 
+export interface Experience {
+    readonly role: string;
+    readonly company: string;
+    readonly duration: string;
+    readonly description: string;
+    readonly tags: readonly string[];
+    readonly achievements?: readonly string[];
+}
+
 export const NAV_LINKS: readonly NavLink[] = [
     { label: 'About', fragment: 'about' },
     { label: 'Skills', fragment: 'skills' },
     { label: 'Projects', fragment: 'projects' },
+    { label: 'Experience', fragment: 'experience' },
     { label: 'Contact', fragment: 'contact' },
 ] as const;
 
@@ -40,62 +50,130 @@ export const HERO_DATA = {
 export const ABOUT_DATA = {
     heading: 'About Me',
     paragraphs: [
-        'I\'m a passionate full-stack developer with 5+ years of experience building web applications that users love. I specialize in Angular, TypeScript, and Node.js, with a keen eye for design and user experience.',
-        'When I\'m not coding, you\'ll find me exploring new technologies, contributing to open-source projects, or sketching UI concepts. I believe great software is born at the intersection of engineering excellence and thoughtful design.',
-        'Currently open to new opportunities and exciting collaborations. Let\'s build something amazing together.',
+        'I\'m a detail-oriented and team-driven Informatics Student at Multimedia Nusantara University interested in Artificial Intelligence, Game Development, and Software Engineering. in integrating several programming language in collaborating academic andpersonal projects. Passionate in software development and creating digital solutions. Always eager to learn new tools and contribute to impactful innovations in technology.',
     ],
     stats: [
-        { value: '5+', label: 'Years Experience' },
-        { value: '30+', label: 'Projects Completed' },
-        { value: '15+', label: 'Happy Clients' },
-        { value: '4', label: 'Open Source Libs' },
+        { value: '3+', label: 'Years Experience' },
+        { value: '10+', label: 'Projects Completed' },
+        { value: '10k+', label: 'lines of code written' },
+        { value: '100+', label: 'cups of coffee consumed' },
     ],
 } as const;
 
 export const SKILLS: readonly Skill[] = [
     { name: 'Angular', icon: '🅰️', category: 'frontend' },
+    { name: 'Vue', icon: '🔷', category: 'frontend' },
     { name: 'TypeScript', icon: '🔷', category: 'frontend' },
     { name: 'React', icon: '⚛️', category: 'frontend' },
     { name: 'Tailwind CSS', icon: '🎨', category: 'frontend' },
     { name: 'HTML / CSS', icon: '🌐', category: 'frontend' },
     { name: 'JavaScript', icon: '⚡', category: 'frontend' },
+    { name: 'Jetpack Compose', icon: '🚀', category: 'frontend' },
+    { name: 'Kotlin', icon: '📱', category: 'frontend' },
+    { name: 'C#', icon: '#', category: 'backend' },
+    { name: 'Java', icon: '☕', category: 'backend' },
+    { name: 'PHP/Laravel', icon: '🐘', category: 'backend' },
+    { name: 'Tensorflow', icon: '🤖', category: 'backend' },
     { name: 'Node.js', icon: '🟢', category: 'backend' },
     { name: 'Python', icon: '🐍', category: 'backend' },
-    { name: 'PostgreSQL', icon: '🐘', category: 'backend' },
+    { name: 'MySQL', icon: '🐘', category: 'backend' },
     { name: 'REST APIs', icon: '🔗', category: 'backend' },
-    { name: 'GraphQL', icon: '◈', category: 'backend' },
-    { name: 'Docker', icon: '🐳', category: 'tools' },
+    { name: 'Postman', icon: '📦', category: 'tools' },
     { name: 'Git', icon: '📦', category: 'tools' },
     { name: 'Figma', icon: '🎯', category: 'tools' },
     { name: 'CI/CD', icon: '🔄', category: 'tools' },
+    { name: 'Unity', icon: '🎮', category: 'tools' },
 ] as const;
 
 export const PROJECTS: readonly Project[] = [
     {
-        title: 'TaskFlow',
-        description: 'A collaborative project management app with real-time updates, Kanban boards, and team analytics. Built with Angular and Firebase.',
-        tags: ['Angular', 'Firebase', 'RxJS', 'Tailwind CSS'],
-        liveUrl: 'https://example.com',
-        repoUrl: 'https://github.com',
+        title: 'Depression Classification from Facial Expressions using EfficientNetB3',
+        description: 'As part of a 5-person research team in the Informatics Department at Universitas Multimedia Nusantara, I worked on building a lightweight deep learning model to screen for depression from facial expressions.',
+        tags: ['PyTorch', 'Python', 'EfficientNetB3', 'CalmScope'],
     },
     {
-        title: 'Lumina UI',
-        description: 'An open-source component library for Angular with 40+ accessible, themeable components and comprehensive documentation.',
-        tags: ['Angular', 'TypeScript', 'Storybook', 'A11y'],
-        repoUrl: 'https://github.com',
+        title: 'MindLens',
+        description: 'MindLens is a holistic Android application designed to facilitate early detection of depression and support mental well-being through daily journaling and mood tracking.',
+        tags: ['Kotlin', 'Android', 'Supabase', 'Jetpack Compose'],
+        repoUrl: 'https://github.com/henrysalim/mindlens',
     },
     {
-        title: 'Wavelength',
-        description: 'A music discovery platform that uses machine learning to recommend tracks based on mood and listening patterns.',
-        tags: ['React', 'Python', 'TensorFlow', 'Spotify API'],
-        liveUrl: 'https://example.com',
+        title: 'Maze Runner',
+        description: 'A small game development project for college, Maze Runner is a 3D maze game where the player controls a character to navigate through a maze to find the exit.',
+        tags: ['Unity', 'C#', '3D', 'Game Development'],
+        liveUrl: 'https://rascalosh.itch.io/mazerunner',
     },
     {
-        title: 'FinTrack',
-        description: 'Personal finance dashboard with expense tracking, budget goals, and interactive charts for visualizing spending habits.',
-        tags: ['Angular', 'Node.js', 'D3.js', 'PostgreSQL'],
-        liveUrl: 'https://example.com',
-        repoUrl: 'https://github.com',
+        title: 'SGP-NET: Scene Graph Priority Network for Priority Seat Validation',
+        description: 'A smart, real-time monitoring system for public transit priority seating, powered by deep learning and contextual analysis. Designed to identify violations and deliver automated feedback, promoting a more inclusive and ethical transit environment.',
+        tags: ['Machine Learning', 'Python', 'Tensorflow', 'SGP-NET'],
+        repoUrl: 'https://github.com/henrysalim/priority-seat-sgp-net',
+    },
+] as const;
+
+export const EXPERIENCES: readonly Experience[] = [
+    {
+        role: 'Laboratory Assistant',
+        company: 'Multimedia Nusantara University',
+        duration: 'Feb 2026 - Present',
+        description: 'Assist student in learning and understanding the concepts of object oriented programming through practical excercises and interactive sessions.',
+        tags: ['OOP', 'Kotlin', 'Tutoring', 'Problem Solving'],
+        achievements: ['Assisted 80 students in learning OOP concepts', 'Improved student understanding of OOP concepts by 20%']
+    },
+    {
+        role: 'Application Developer Intern',
+        company: 'IDS Medical Systems Indonesia',
+        duration: 'Jan 2026 - Present',
+        description: 'Develop and maintain web applications for healthcare professionals, ensuring high performance and data accuracy.',
+        tags: ['Angular', 'TypeScript', 'Node.js', 'Laravel', 'Flutter'],
+        achievements: []
+    },
+    {
+        role: 'Chairman',
+        company: 'Bringing Your Tech Experience',
+        duration: 'Feb 2025 — Dec 2025',
+        description: 'Led a multidisciplinary team to organize a technology-focused event aimed at inspiring innovation and collaboration among Informatics students.',
+        tags: ['Leadership', 'Event Management', 'Teamwork'],
+        achievements: [
+            'Led a team of 100+ students to organize a technology-focused event',
+            'Collaborated with industry professionals to deliver high-quality content and workshops',
+            'Coordinated event planning and execution for 200+ attendees',
+        ],
+    },
+    {
+        role: 'Vice Head of Division - Project Manager',
+        company: 'HMIF UMN',
+        duration: 'Dec 2024 - Dec 2025',
+        description: 'Acted as vice head of division overseeing the division responsible for planning and executing HMIF programs and initiatives. Supported project leads in organizing timelines, coordinating teams, and ensuring each program aligned with the organization’s goals. Contributed to workflow improvements, internal communication, and smooth execution of events. Strengthened leadership, coordination, and cross-team collaboration across the student association.',
+        tags: ['Leadership', 'Project Management', 'Teamwork'],
+        achievements: [
+            'Brainstormed and executed 5+ programs for HMIF UMN',
+            'Improved internal communication and workflow efficiency',
+            'Strengthened leadership, coordination, and cross-team collaboration',
+        ],
+    },
+    {
+        role: 'Backend Developer',
+        company: 'UMN Radioactive 2025',
+        duration: 'Mar 2025 - Nov 2025',
+        description: 'Developed a backend system for UMN Radioactive 2025 website',
+        tags: ['Laravel', 'PHP'],
+        achievements: [
+            'Developed a merchandise management system',
+            'Developed a ticketing system',
+        ],
+    },
+    {
+        role: 'Head of Division - Event',
+        company: 'Perkenalan Prodi Informatika UMN 2025',
+        duration: 'Jan 2025 - Sep 2025',
+        description: 'Led the event division for Perkenalan Prodi Informatika 2025 with 2 of my partners, managing the full program flow from planning to execution. Coordinated sub-teams, aligned schedules, and ensured every segment ran smoothly on the day of the event. Collaborated with committees, speakers, and technical crews to deliver an engaging experience for incoming students. Also trained division members as a Master of Ceremony, sharpening stage presence, pacing, and audience engagement. Built strong skills in event design, leadership, and real-time coordination.',
+        tags: ['Leadership', 'Event Planning', 'Teamwork'],
+        achievements: [
+            'Co-developed a sentiment analysis tool for social media data',
+            'Presented research findings at 2 internal symposiums',
+            'Contributed to an open-source NLP dataset for Bahasa Indonesia',
+        ],
     },
 ] as const;
 
@@ -114,5 +192,10 @@ export const SOCIAL_LINKS: readonly SocialLink[] = [
         label: 'Email',
         url: 'mailto:willbertlian@gmail.com',
         svgPath: 'M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67zM22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z',
+    },
+    {
+        label: 'WhatsApp',
+        url: 'https://wa.me/6288297999171',
+        svgPath: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z',
     },
 ] as const;

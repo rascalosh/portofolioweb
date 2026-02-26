@@ -1,15 +1,11 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
     selector: 'app-contact',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule],
     template: `
-    <section
-      id="contact"
-      class="py-24 px-6"
+    <section id="contact" class="py-24 px-6"
       aria-labelledby="contact-heading"
     >
       <div class="max-w-4xl mx-auto">
@@ -23,122 +19,58 @@ import { ThemeService } from '../../services/theme.service';
           <h2 id="contact-heading" class="font-display text-3xl sm:text-4xl font-bold mt-2">
             Get In Touch
           </h2>
-          <p class="mt-4 max-w-lg mx-auto"
+          <p class="mt-4 max-w-xl mx-auto"
             [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
           >
-            Have a project in mind or just want to say hello? I'd love to hear from you.
+            Feel free to reach out through any of the platforms below, I'd love to connect!
           </p>
         </div>
 
-        <!-- Contact Form -->
-        <div
-          class="rounded-2xl p-8 sm:p-10 transition-colors duration-300"
-          [class]="isDark()
-            ? 'bg-card-dark border border-border-dark'
-            : 'bg-card-light border border-border-light shadow-sm'"
-        >
-          @if (submitted()) {
-            <div class="text-center py-8" role="status">
-              <div class="text-4xl mb-4" aria-hidden="true">✉️</div>
-              <h3 class="font-display text-xl font-bold mb-2">Message Sent!</h3>
-              <p [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'">
-                Thanks for reaching out. I'll get back to you soon.
-              </p>
-            </div>
-          } @else {
-            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-              <div class="grid sm:grid-cols-2 gap-6 mb-6">
-                <!-- Name -->
-                <div>
-                  <label
-                    for="contact-name"
-                    class="block text-sm font-medium mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    formControlName="name"
-                    class="w-full px-4 py-3 rounded-xl text-sm transition-all duration-200 border outline-none"
-                    [class]="isDark()
-                      ? 'bg-surface-dark border-border-dark text-text-dark placeholder:text-muted-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500'
-                      : 'bg-surface-light border-border-light text-text-light placeholder:text-muted-light focus:border-primary-400 focus:ring-1 focus:ring-primary-400'"
-                    placeholder="Your name"
-                    [attr.aria-invalid]="contactForm.controls.name.touched && contactForm.controls.name.invalid"
-                    [attr.aria-describedby]="contactForm.controls.name.touched && contactForm.controls.name.invalid ? 'name-error' : null"
-                  >
-                  @if (contactForm.controls.name.touched && contactForm.controls.name.invalid) {
-                    <p id="name-error" class="text-red-500 text-xs mt-1.5" role="alert">Name is required.</p>
-                  }
-                </div>
-
-                <!-- Email -->
-                <div>
-                  <label
-                    for="contact-email"
-                    class="block text-sm font-medium mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    formControlName="email"
-                    class="w-full px-4 py-3 rounded-xl text-sm transition-all duration-200 border outline-none"
-                    [class]="isDark()
-                      ? 'bg-surface-dark border-border-dark text-text-dark placeholder:text-muted-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500'
-                      : 'bg-surface-light border-border-light text-text-light placeholder:text-muted-light focus:border-primary-400 focus:ring-1 focus:ring-primary-400'"
-                    placeholder="you@example.com"
-                    [attr.aria-invalid]="contactForm.controls.email.touched && contactForm.controls.email.invalid"
-                    [attr.aria-describedby]="contactForm.controls.email.touched && contactForm.controls.email.invalid ? 'email-error' : null"
-                  >
-                  @if (contactForm.controls.email.touched && contactForm.controls.email.invalid) {
-                    <p id="email-error" class="text-red-500 text-xs mt-1.5" role="alert">
-                      @if (contactForm.controls.email.errors?.['required']) {
-                        Email is required.
-                      } @else {
-                        Please enter a valid email.
-                      }
-                    </p>
-                  }
-                </div>
-              </div>
-
-              <!-- Message -->
-              <div class="mb-6">
-                <label
-                  for="contact-message"
-                  class="block text-sm font-medium mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  formControlName="message"
-                  rows="5"
-                  class="w-full px-4 py-3 rounded-xl text-sm transition-all duration-200 border outline-none resize-y"
-                  [class]="isDark()
-                    ? 'bg-surface-dark border-border-dark text-text-dark placeholder:text-muted-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500'
-                    : 'bg-surface-light border-border-light text-text-light placeholder:text-muted-light focus:border-primary-400 focus:ring-1 focus:ring-primary-400'"
-                  placeholder="Tell me about your project..."
-                  [attr.aria-invalid]="contactForm.controls.message.touched && contactForm.controls.message.invalid"
-                  [attr.aria-describedby]="contactForm.controls.message.touched && contactForm.controls.message.invalid ? 'message-error' : null"
-                ></textarea>
-                @if (contactForm.controls.message.touched && contactForm.controls.message.invalid) {
-                  <p id="message-error" class="text-red-500 text-xs mt-1.5" role="alert">Message is required.</p>
-                }
-              </div>
-
-              <!-- Submit -->
-              <button
-                type="submit"
-                [disabled]="contactForm.invalid"
-                class="w-full py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 cursor-pointer border-0 bg-primary-500 hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-primary-500/25"
+        <!-- Contact Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          @for (contact of contacts; track contact.label) {
+            <a
+              [href]="contact.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col items-center gap-4 p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+              [class]="isDark()
+                ? 'bg-card-dark border border-border-dark hover:border-primary-500/40 hover:shadow-lg hover:shadow-primary-500/5'
+                : 'bg-card-light border border-border-light hover:border-primary-300 hover:shadow-lg hover:shadow-primary-100'"
+              [attr.aria-label]="'Contact via ' + contact.label"
+            >
+              <!-- Icon -->
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                [class]="isDark()
+                  ? 'bg-primary-600/15 text-primary-300 group-hover:bg-primary-600/25'
+                  : 'bg-primary-50 text-primary-600 group-hover:bg-primary-100'"
               >
-                Send Message
-              </button>
-            </form>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7" aria-hidden="true">
+                  <path [attr.d]="contact.svgPath" />
+                </svg>
+              </div>
+
+              <!-- Label -->
+              <h3 class="font-display text-lg font-semibold">
+                {{ contact.label }}
+              </h3>
+
+              <!-- Value -->
+              <span class="text-sm text-center"
+                [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
+              >
+                {{ contact.displayValue }}
+              </span>
+
+              <!-- Hover CTA -->
+              <span class="text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0"
+                [class]="isDark()
+                  ? 'bg-primary-600/15 text-primary-300'
+                  : 'bg-primary-50 text-primary-600'"
+              >
+                {{ contact.cta }}
+              </span>
+            </a>
           }
         </div>
       </div>
@@ -147,23 +79,29 @@ import { ThemeService } from '../../services/theme.service';
 })
 export class ContactComponent {
     private readonly themeService = inject(ThemeService);
-    private readonly fb = inject(FormBuilder);
-
     protected readonly isDark = this.themeService.isDark;
-    protected readonly submitted = signal(false);
 
-    protected readonly contactForm = this.fb.nonNullable.group({
-        name: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        message: ['', Validators.required],
-    });
-
-    protected onSubmit(): void {
-        if (this.contactForm.valid) {
-            // In a real app, you'd send the form data to an API here
-            this.submitted.set(true);
-        } else {
-            this.contactForm.markAllAsTouched();
-        }
-    }
+    protected readonly contacts = [
+        {
+            label: 'WhatsApp',
+            url: 'https://wa.me/6288297999171',
+            displayValue: '+62 882-9799-9171',
+            cta: 'Send a message →',
+            svgPath: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z',
+        },
+        {
+            label: 'Email',
+            url: 'mailto:willbertlian@gmail.com',
+            displayValue: 'willbertlian@gmail.com',
+            cta: 'Send an email →',
+            svgPath: 'M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67zM22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z',
+        },
+        {
+            label: 'Instagram',
+            url: 'https://instagram.com/willbertbudi',
+            displayValue: '@willbertlian',
+            cta: 'Follow me →',
+            svgPath: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z',
+        },
+    ];
 }

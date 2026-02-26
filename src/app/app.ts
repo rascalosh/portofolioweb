@@ -4,8 +4,10 @@ import { HeroComponent } from './components/hero/hero.component';
 import { AboutComponent } from './components/about/about.component';
 import { SkillsComponent } from './components/skills/skills.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ExperienceComponent } from './components/experience/exp.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +18,10 @@ import { FooterComponent } from './components/footer/footer.component';
     AboutComponent,
     SkillsComponent,
     ProjectsComponent,
+    ExperienceComponent,
     ContactComponent,
     FooterComponent,
+    ScrollTopComponent,
   ],
   template: `
     <app-header />
@@ -26,9 +30,11 @@ import { FooterComponent } from './components/footer/footer.component';
       <app-about />
       <app-skills />
       <app-projects />
+      <app-exp />
       <app-contact />
     </main>
     <app-footer />
+    <app-scroll-top />
   `,
 })
 export class App { }

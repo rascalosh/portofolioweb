@@ -3,9 +3,9 @@ import { ThemeService } from '../../services/theme.service';
 import { PROJECTS } from '../../data/portfolio-data';
 
 @Component({
-    selector: 'app-projects',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: 'app-projects',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <section
       id="projects"
       class="py-24 px-6"
@@ -22,6 +22,11 @@ import { PROJECTS } from '../../data/portfolio-data';
           <h2 id="projects-heading" class="font-display text-3xl sm:text-4xl font-bold mt-2">
             Featured Work
           </h2>
+          <p class="mt-4 max-w-2xl mx-auto"
+            [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
+          >
+            Here's a look at my projects that i've created and collaborated with others
+          </p>
         </div>
 
         <!-- Projects Grid -->
@@ -109,15 +114,15 @@ import { PROJECTS } from '../../data/portfolio-data';
   `,
 })
 export class ProjectsComponent {
-    private readonly themeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
 
-    protected readonly isDark = this.themeService.isDark;
-    protected readonly projects = PROJECTS;
+  protected readonly isDark = this.themeService.isDark;
+  protected readonly projects = PROJECTS;
 
-    protected readonly bannerGradients = [
-        'bg-gradient-to-r from-primary-400 to-primary-600',
-        'bg-gradient-to-r from-accent-400 to-accent-500',
-        'bg-gradient-to-r from-primary-500 to-accent-400',
-        'bg-gradient-to-r from-accent-500 to-primary-400',
-    ];
+  protected readonly bannerGradients = [
+    'bg-gradient-to-r from-primary-400 to-primary-600',
+    'bg-gradient-to-r from-accent-400 to-accent-500',
+    'bg-gradient-to-r from-primary-500 to-accent-400',
+    'bg-gradient-to-r from-accent-500 to-primary-400',
+  ];
 }

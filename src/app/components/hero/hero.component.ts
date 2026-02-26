@@ -101,9 +101,9 @@ import { HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
         <!-- Right: Profile Photo -->
         <div class="flex justify-center md:justify-end order-1 md:order-2 mt-10">
           <div class="relative">
-            <!-- Decorative ring -->
+            <!-- Decorative glow blob -->
             <div
-              class="absolute -inset-3 rounded-full opacity-20 blur-sm"
+              class="absolute -inset-3 opacity-20 blur-md blob-morph"
               [class]="isDark()
                 ? 'bg-gradient-to-br from-primary-500 to-accent-500'
                 : 'bg-gradient-to-br from-primary-300 to-accent-400'"
@@ -111,25 +111,18 @@ import { HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
             ></div>
             <!-- Dotted ring decoration -->
             <div
-              class="absolute -inset-6 rounded-full border-2 border-dashed opacity-30 animate-spin"
-              [style.animation-duration]="'25s'"
+              class="absolute -inset-6 border-2 border-dashed opacity-30 animate-spin blob-morph-reverse"
               [class]="isDark() ? 'border-primary-500' : 'border-primary-300'"
               aria-hidden="true"
             ></div>
-            <!-- Photo container -->
+            <!-- Photo container (blob) -->
             <div
-              class="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80  rounded-full overflow-hidden border-4 shadow-2xl"
+              class="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 overflow-hidden border-4 shadow-2xl rounded-full"
               [class]="isDark()
                 ? 'border-border-dark shadow-primary-500/10'
                 : 'border-white shadow-primary-200/50'"
             >
-
               <img src="assets/foto.jpg" alt="Willbert Budi Lian" class="w-full h-full object-cover" />
-                <span class="font-display text-7xl sm:text-8xl font-bold select-none"
-                  [class]="isDark() ? 'text-primary-300/60' : 'text-primary-400/50'"
-                >
-                  WB
-                </span>
             </div>
             <!-- Status dot -->
             <div
@@ -143,6 +136,33 @@ import { HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
 
     </section>
   `,
+  styles: [`
+    .blob-morph {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      animation: blob-shift 8s ease-in-out infinite;
+    }
+
+    .blob-morph-reverse {
+      border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+      animation: blob-shift-reverse 10s ease-in-out infinite;
+    }
+
+    @keyframes blob-shift {
+      0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+      50%  { border-radius: 50% 60% 30% 60% / 40% 70% 60% 30%; }
+      75%  { border-radius: 40% 30% 60% 50% / 60% 40% 30% 70%; }
+      100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    }
+
+    @keyframes blob-shift-reverse {
+      0%   { border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%; }
+      25%  { border-radius: 70% 30% 50% 60% / 30% 50% 70% 40%; }
+      50%  { border-radius: 30% 50% 60% 40% / 70% 30% 40% 60%; }
+      75%  { border-radius: 60% 70% 40% 30% / 50% 60% 50% 40%; }
+      100% { border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%; }
+    }
+  `],
 })
 export class HeroComponent {
   private readonly themeService = inject(ThemeService);

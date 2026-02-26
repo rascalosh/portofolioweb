@@ -5,9 +5,9 @@ import { SKILLS, Skill } from '../../data/portfolio-data';
 type SkillCategory = 'all' | Skill['category'];
 
 @Component({
-    selector: 'app-skills',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: 'app-skills',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <section
       id="skills"
       class="py-24 px-6"
@@ -24,6 +24,11 @@ type SkillCategory = 'all' | Skill['category'];
           <h2 id="skills-heading" class="font-display text-3xl sm:text-4xl font-bold mt-2">
             Technologies I Work With
           </h2>
+          <p class="mt-4 max-w-2xl mx-auto"
+            [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
+          >
+            Programming Languages, Tech Stack, and Tools
+          </p>
         </div>
 
         <!-- Filter Tabs -->
@@ -71,25 +76,25 @@ type SkillCategory = 'all' | Skill['category'];
   `,
 })
 export class SkillsComponent {
-    private readonly themeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
 
-    protected readonly isDark = this.themeService.isDark;
-    protected readonly activeCategory = signal<SkillCategory>('all');
+  protected readonly isDark = this.themeService.isDark;
+  protected readonly activeCategory = signal<SkillCategory>('all');
 
-    protected readonly categories: readonly { value: SkillCategory; label: string }[] = [
-        { value: 'all', label: 'All' },
-        { value: 'frontend', label: 'Frontend' },
-        { value: 'backend', label: 'Backend' },
-        { value: 'tools', label: 'Tools' },
-    ];
+  protected readonly categories: readonly { value: SkillCategory; label: string }[] = [
+    { value: 'all', label: 'All' },
+    { value: 'frontend', label: 'Frontend' },
+    { value: 'backend', label: 'Backend' },
+    { value: 'tools', label: 'Tools' },
+  ];
 
-    protected readonly filteredSkills = computed(() => {
-        const cat = this.activeCategory();
-        if (cat === 'all') return SKILLS;
-        return SKILLS.filter((s) => s.category === cat);
-    });
+  protected readonly filteredSkills = computed(() => {
+    const cat = this.activeCategory();
+    if (cat === 'all') return SKILLS;
+    return SKILLS.filter((s) => s.category === cat);
+  });
 
-    protected setCategory(category: SkillCategory): void {
-        this.activeCategory.set(category);
-    }
+  protected setCategory(category: SkillCategory): void {
+    this.activeCategory.set(category);
+  }
 }
