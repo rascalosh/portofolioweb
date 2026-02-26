@@ -12,8 +12,9 @@
             @for (link of navLinks; track link.fragment) {
             <li>
                 <a [href]="'#' + link.fragment"
-                    class="text-sm font-medium transition-colors duration-200 hover:text-primary-500"
-                    [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'">
+                    class="text-sm font-medium transition-colors duration-200 hover:text-primary-500" [class]="activeFragment() === link.fragment
+                        ? 'text-primary-500'
+                        : (isDark() ? 'text-muted-dark' : 'text-muted-light')">
                     {{ link.label }}
                 </a>
             </li>
@@ -96,7 +97,9 @@
             <li>
                 <a [href]="'#' + link.fragment"
                     class="block text-base font-medium py-2 transition-colors duration-200 hover:text-primary-500"
-                    [class]="isDark() ? 'text-text-dark' : 'text-text-light'" (click)="closeMobileMenu()">
+                    [class]="activeFragment() === link.fragment
+                        ? 'text-primary-500'
+                        : (isDark() ? 'text-text-dark' : 'text-text-light')" (click)="closeMobileMenu()">
                     {{ link.label }}
                 </a>
             </li>

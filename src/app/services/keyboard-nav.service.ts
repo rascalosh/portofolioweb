@@ -1,4 +1,4 @@
-import { Injectable, inject, OnDestroy, NgZone, signal } from '@angular/core';
+import { Injectable, inject, OnDestroy, NgZone, signal, computed } from '@angular/core';
 
 const SECTION_IDS = ['hero', 'about', 'skills', 'projects', 'experience', 'contact'] as const;
 type SectionId = typeof SECTION_IDS[number];
@@ -12,6 +12,9 @@ export class KeyboardNavService implements OnDestroy {
 
     /** Index of the section currently most visible in the viewport. */
     readonly activeSectionIndex = signal(0);
+
+    /** Fragment ID of the currently active section (e.g. 'about', 'skills'). */
+    readonly activeFragment = computed(() => SECTION_IDS[this.activeSectionIndex()] as string);
 
     private observer: IntersectionObserver | null = null;
     private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
@@ -34,8 +37,7 @@ export class KeyboardNavService implements OnDestroy {
         }
     }
 
-    // ── Intersection Observer ──────────────────────────────────
-    /** Track which section is most visible to determine the "active" one. */
+
     private observeSections(): void {
         const visibilityMap = new Map<string, number>();
 
@@ -45,7 +47,7 @@ export class KeyboardNavService implements OnDestroy {
                     visibilityMap.set(entry.target.id, entry.intersectionRatio);
                 }
 
-                // Find the section with the highest visibility
+
                 let maxRatio = 0;
                 let activeId: string = SECTION_IDS[0];
                 for (const [id, ratio] of visibilityMap) {
