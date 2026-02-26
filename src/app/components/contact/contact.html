@@ -1,0 +1,61 @@
+<section id="contact" class="py-24 px-6" aria-labelledby="contact-heading">
+    <div class="max-w-4xl mx-auto">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <span class="text-sm font-semibold tracking-widest uppercase"
+                [class]="isDark() ? 'text-primary-400' : 'text-primary-500'">
+                Contact
+            </span>
+            <h2 id="contact-heading" class="font-display text-3xl sm:text-4xl font-bold mt-2">
+                Get In Touch
+            </h2>
+            <p class="mt-4 max-w-xxl mx-auto" [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'">
+                Feel free to reach out through any of the platforms below, I'd love to connect!
+            </p>
+        </div>
+
+        <!-- Contact Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            @for (social of socialLinks; track social.label) {
+            @if(social.label !== 'GitHub' && social.label !== 'LinkedIn'){
+            <a [href]="social.url" target="_blank" rel="noopener noreferrer"
+                class="group flex flex-col items-center gap-4 p-8 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                [class]="isDark()
+                    ? 'bg-card-dark border border-border-dark hover:border-primary-500/40 hover:shadow-lg hover:shadow-primary-500/5'
+                    : 'bg-card-light border border-border-light hover:border-primary-300 hover:shadow-lg hover:shadow-primary-100'"
+                [attr.aria-label]="'Contact via ' + social.label">
+                <!-- Icon -->
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    [class]="isDark()
+                    ? 'bg-primary-600/15 text-primary-300 group-hover:bg-primary-600/25'
+                    : 'bg-primary-50 text-primary-600 group-hover:bg-primary-100'">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7"
+                        aria-hidden="true">
+                        <path [attr.d]="social.svgPath" />
+                    </svg>
+                </div>
+
+                <!-- Label -->
+                <h3 class="font-display text-lg font-semibold">
+                    {{ social.label }}
+                </h3>
+
+                <!-- Value -->
+                <span class="text-sm text-center" [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'">
+                    {{ social.displayValue }}
+                </span>
+
+                <!-- Hover CTA -->
+                <span
+                    class="text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0"
+                    [class]="isDark()
+                    ? 'bg-primary-600/15 text-primary-300'
+                    : 'bg-primary-50 text-primary-600'">
+                    {{ social.cta }}
+                </span>
+            </a>
+            }
+            }
+        </div>
+    </div>
+</section>
