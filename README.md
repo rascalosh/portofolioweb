@@ -136,31 +136,6 @@ Build artifacts will be stored in the `dist/latihan-angular/browser` directory.
 ```bash
 npm test
 ```
-
----
-
-## 🌐 Deployment
-
-This project is configured for deployment on **Vercel** with the following settings (see [`vercel.json`](vercel.json)):
-
-```json
-{
-  "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/latihan-angular/browser",
-  "framework": null,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
-```
-
-### Deploy to Vercel
-
-1. Push your code to GitHub
-2. Import the repository on [Vercel](https://vercel.com)
-3. Vercel will auto-detect the configuration from `vercel.json`
-4. Your site will be live! 🎉
-
 ---
 
 ## 📝 Customization
