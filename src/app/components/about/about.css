@@ -1,0 +1,9 @@
+.about-paragraph {
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .about-paragraph {
+        text-align: justify;
+    }
+}

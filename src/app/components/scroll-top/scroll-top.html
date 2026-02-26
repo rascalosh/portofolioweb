@@ -1,0 +1,12 @@
+@if (isVisible()) {
+<button type="button" (click)="scrollToTop()"
+    class="fixed right-8 z-50 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg cursor-pointer border-0 hover:scale-110 hover:-translate-y-1 animate-fade-in"
+    [style.bottom.px]="footerVisibleHeight() > 0 ? footerVisibleHeight() + 32 : 32" [class]="isDark()
+        ? 'bg-primary-500 text-white hover:bg-primary-400 shadow-primary-500/25'
+        : 'bg-primary-500 text-white hover:bg-primary-600 shadow-primary-500/30'" aria-label="Scroll to top">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"
+        class="w-5 h-5" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+    </svg>
+</button>
+}
