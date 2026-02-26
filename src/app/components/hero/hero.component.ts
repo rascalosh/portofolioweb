@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, AfterViewInit, NgZone } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
+import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-hero',
@@ -34,10 +35,33 @@ import { HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
     }
   `],
 })
-export class HeroComponent {
+export class HeroComponent implements AfterViewInit {
   private readonly themeService = inject(ThemeService);
+  private readonly ngZone = inject(NgZone);
 
   protected readonly isDark = this.themeService.isDark;
   protected readonly heroData = HERO_DATA;
   protected readonly socialLinks = SOCIAL_LINKS;
+
+  ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      // Text content - slide in from left
+      tl.from('#hero .text-left > *', {
+        x: -60,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+      });
+
+      // Profile photo - scale in from right
+      tl.from('#hero .relative', {
+        x: 60,
+        opacity: 0,
+        scale: 0.8,
+        duration: 1,
+      }, '-=0.6');
+    });
+  }
 }

@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { SKILLS, Skill } from '../../data/portfolio-data';
+import { ScrollAnimationService } from '../../services/scroll-animation.service';
 
 type SkillCategory = 'all' | Skill['category'];
 
@@ -10,8 +11,9 @@ type SkillCategory = 'all' | Skill['category'];
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: 'skills.html',
 })
-export class SkillsComponent {
+export class SkillsComponent implements AfterViewInit {
   private readonly themeService = inject(ThemeService);
+  private readonly scrollAnim = inject(ScrollAnimationService);
 
   protected readonly isDark = this.themeService.isDark;
   protected readonly activeCategory = signal<SkillCategory>('all');
@@ -31,5 +33,31 @@ export class SkillsComponent {
 
   protected setCategory(category: SkillCategory): void {
     this.activeCategory.set(category);
+  }
+
+  ngAfterViewInit(): void {
+    // Section header
+    this.scrollAnim.animateOnScroll(
+      '#skills .text-center',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+      '#skills',
+    );
+
+    // Filter tabs
+    this.scrollAnim.animateOnScroll(
+      '#skills [role="tablist"]',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: '#skills', start: 'top 75%' } },
+    );
+
+    // Skill cards stagger
+    this.scrollAnim.staggerOnScroll(
+      '#skills [role="tabpanel"]',
+      '> div',
+      { y: 30, opacity: 0, scale: 0.9 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' },
+      0.05,
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { HeroComponent } from './components/hero/hero.component';
 import { AboutComponent } from './components/about/about.component';
@@ -8,6 +8,7 @@ import { ExperienceComponent } from './components/experience/exp.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
+import { KeyboardNavService } from './services/keyboard-nav.service';
 
 @Component({
   selector: 'app-root',
@@ -37,4 +38,11 @@ import { ScrollTopComponent } from './components/scroll-top/scroll-top.component
     <app-scroll-top />
   `,
 })
-export class App { }
+export class App implements AfterViewInit {
+  private readonly keyboardNav = inject(KeyboardNavService);
+
+  ngAfterViewInit(): void {
+    this.keyboardNav.init();
+  }
+}
+

@@ -1,128 +1,37 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, AfterViewInit } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { EXPERIENCES } from '../../data/portfolio-data';
+import { ScrollAnimationService } from '../../services/scroll-animation.service';
 
 @Component({
-    selector: 'app-exp',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-    <section id="experience" class="py-24 px-6"
-      aria-labelledby="experience-heading"
-    >
-      <div class="max-w-6xl mx-auto">
-        <!-- Section Header -->
-        <div class="text-center mb-16">
-          <span class="text-sm font-semibold tracking-widest uppercase"
-            [class]="isDark() ? 'text-primary-400' : 'text-primary-500'"
-          >
-            Experience
-          </span>
-          <h2 id="experience-heading" class="font-display text-3xl sm:text-4xl font-bold mt-2">
-            Volunteering &amp; Organizations
-          </h2>
-          <p class="mt-4 max-w-2xl mx-auto"
-            [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
-          >
-            Here's a look at my journey in communities and the impact I've made
-          </p>
-        </div>
-
-        <!-- Experience Timeline -->
-        <div class="relative">
-          <!-- Vertical Line -->
-          <div class="absolute left-4 top-0 bottom-0 w-0.5"
-            [class]="isDark() ? 'bg-border-dark' : 'bg-border-light'"
-          ></div>
-
-          <!-- Timeline Items -->
-          <div class="space-y-10 pl-12">
-            @for (exp of experiences; track exp.company) {
-              <div class="relative group">
-                <!-- Timeline Dot -->
-                <div class="absolute left-[-2.5rem] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300 group-hover:scale-125"
-                  [class]="isDark()
-                    ? 'bg-card-dark border-primary-500'
-                    : 'bg-white border-primary-500'"
-                ></div>
-                
-                <!-- Content Card -->
-                <div class="p-6 rounded-2xl transition-all duration-300 hover:-translate-y-0.5"
-                  [class]="isDark()
-                    ? 'bg-card-dark border border-border-dark hover:border-primary-500/30'
-                    : 'bg-card-light border border-border-light hover:border-primary-300 shadow-sm hover:shadow-md'"
-                >
-                  <!-- Header -->
-                  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
-                    <div>
-                      <h3 class="font-display text-xl font-bold mb-1">
-                        {{ exp.role }}
-                      </h3>
-                      <p class="text-base font-medium"
-                        [class]="isDark() ? 'text-primary-300' : 'text-primary-600'"
-                      >
-                        {{ exp.company }}
-                      </p>
-                      <p class="text-sm mt-1"
-                        [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
-                      >
-                        {{ exp.duration }}
-                      </p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 sm:justify-end">
-                      @for (tag of exp.tags; track tag) {
-                        <span class="px-3 py-1 text-xs font-medium rounded-lg transition-colors duration-200"
-                          [class]="isDark()
-                            ? 'bg-primary-600/15 text-primary-300'
-                            : 'bg-primary-50 text-primary-600'"
-                        >
-                          {{ tag }}
-                        </span>
-                      }
-                    </div>
-                  </div>
-
-                  <!-- Description -->
-                  <p class="text-sm leading-relaxed mb-4"
-                    [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
-                  >
-                    {{ exp.description }}
-                  </p>
-
-                  <!-- Achievements -->
-                  @if (exp.achievements && exp.achievements.length > 0) {
-                    <div class="space-y-2">
-                      @for (achievement of exp.achievements; track achievement) {
-                        <div class="flex items-start gap-3">
-                          <svg class="w-4 h-4 mt-0.5 shrink-0"
-                            [class]="isDark() ? 'text-accent-400' : 'text-accent-500'"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            aria-hidden="true"
-                          >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M5 13l4 4L19 7"></path>
-                          </svg>
-                          <span class="text-sm"
-                            [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
-                          >
-                            {{ achievement }}
-                          </span>
-                        </div>
-                      }
-                    </div>
-                  }
-                </div>
-                
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-  `,
+  selector: 'app-exp',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: 'exp.html',
 })
-export class ExperienceComponent {
-    private readonly themeService = inject(ThemeService);
+export class ExperienceComponent implements AfterViewInit {
+  private readonly themeService = inject(ThemeService);
+  private readonly scrollAnim = inject(ScrollAnimationService);
 
-    protected readonly isDark = this.themeService.isDark;
-    protected readonly experiences = EXPERIENCES;
+  protected readonly isDark = this.themeService.isDark;
+  protected readonly experiences = EXPERIENCES;
+
+  ngAfterViewInit(): void {
+    // Section header
+    this.scrollAnim.animateOnScroll(
+      '#experience .text-center',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+      '#experience',
+    );
+
+    // Timeline cards stagger from left
+    this.scrollAnim.staggerOnScroll(
+      '#experience .space-y-10',
+      '> .relative',
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
+      0.2,
+    );
+  }
 }
+
