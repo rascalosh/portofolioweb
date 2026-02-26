@@ -3,54 +3,13 @@ import { ThemeService } from '../../services/theme.service';
 import { SOCIAL_LINKS } from '../../data/portfolio-data';
 
 @Component({
-    selector: 'app-footer',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-    <footer
-      class="py-10 px-6 border-t transition-colors duration-300"
-      [class]="isDark() ? 'border-border-dark' : 'border-border-light'"
-      role="contentinfo"
-    >
-      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-        <!-- Branding -->
-        <div class="flex items-center gap-4">
-          <span class="font-display text-lg font-bold tracking-tight">
-            WB<span class="text-primary-500">.</span>
-          </span>
-          <span class="text-sm"
-            [class]="isDark() ? 'text-muted-dark' : 'text-muted-light'"
-          >
-            &copy; 2026 Willbert Budi Lian. All rights reserved. Built with <span class="text-primary-500">Angular</span>
-          </span>
-        </div>
-
-        <!-- Social Links -->
-        <div class="flex items-center gap-3" role="list" aria-label="Social links">
-          @for (social of socialLinks; track social.label) {
-            <a
-              [href]="social.url"
-              [attr.aria-label]="social.label"
-              target="_blank"
-              rel="noopener noreferrer"
-              role="listitem"
-              class="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-              [class]="isDark()
-                ? 'text-muted-dark hover:text-primary-300 hover:bg-card-dark'
-                : 'text-muted-light hover:text-primary-600 hover:bg-primary-50'"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4" aria-hidden="true">
-                <path [attr.d]="social.svgPath" />
-              </svg>
-            </a>
-          }
-        </div>
-      </div>
-    </footer>
-  `,
+  selector: 'app-footer',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: 'footer.html',
 })
 export class FooterComponent {
-    private readonly themeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
 
-    protected readonly isDark = this.themeService.isDark;
-    protected readonly socialLinks = SOCIAL_LINKS;
+  protected readonly isDark = this.themeService.isDark;
+  protected readonly socialLinks = SOCIAL_LINKS;
 }
