@@ -1,57 +1,92 @@
 import { Injectable, NgZone, inject } from '@angular/core';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 @Injectable({ providedIn: 'root' })
 export class ScrollAnimationService {
     private readonly ngZone = inject(NgZone);
 
+    private scrollTriggerLoaded = false;
+    private loadingPromise: Promise<void> | null = null;
+
+    constructor() {
+        this.loadScrollTrigger();
+    }
+
+    /**
+     * Dynamically load ScrollTrigger (production safe).
+     */
+    private loadScrollTrigger(): Promise<void> {
+        if (this.scrollTriggerLoaded) {
+            return Promise.resolve();
+        }
+
+        if (this.loadingPromise) {
+            return this.loadingPromise;
+        }
+
+        if (typeof window === 'undefined') {
+            return Promise.resolve();
+        }
+
+        this.loadingPromise = import('gsap/ScrollTrigger').then((module) => {
+            gsap.registerPlugin(module.ScrollTrigger);
+            this.scrollTriggerLoaded = true;
+
+            // Small delay to ensure layout is stable
+            setTimeout(() => {
+                module.ScrollTrigger.refresh();
+            }, 200);
+        });
+
+        return this.loadingPromise;
+    }
+
     /**
      * Animate elements when they enter the viewport.
-     * Runs outside Angular zone for performance.
      */
-    animateOnScroll(
+    async animateOnScroll(
         elements: string | Element | Element[],
         fromVars: gsap.TweenVars,
         toVars: gsap.TweenVars,
         triggerElement?: string | Element,
-    ): gsap.core.Tween {
+    ): Promise<gsap.core.Tween | null> {
+        await this.loadScrollTrigger();
+
         return this.ngZone.runOutsideAngular(() =>
             gsap.fromTo(elements, fromVars, {
                 ...toVars,
                 scrollTrigger: {
-                    trigger: (triggerElement as gsap.DOMTarget) ?? (elements as gsap.DOMTarget),
+                    trigger: triggerElement ?? elements,
                     start: 'top 85%',
                     end: 'bottom 20%',
                     toggleActions: 'play reverse play reverse',
-                    ...(toVars.scrollTrigger as object),
+                    ...(toVars.scrollTrigger as any),
                 },
             }),
         );
     }
 
     /**
-     * Stagger animate children of a container.
+     * Stagger animate children inside container.
      */
-    staggerOnScroll(
+    async staggerOnScroll(
         container: string | Element,
         children: string,
         fromVars: gsap.TweenVars,
         toVars: gsap.TweenVars,
         stagger = 0.1,
-    ): gsap.core.Tween {
-        const selector = `${container} ${children}`;
+    ): Promise<gsap.core.Tween | null> {
+        await this.loadScrollTrigger();
+
         return this.ngZone.runOutsideAngular(() =>
-            gsap.fromTo(selector, fromVars, {
+            gsap.fromTo(`${container} ${children}`, fromVars, {
                 ...toVars,
                 stagger,
                 scrollTrigger: {
-                    trigger: container as gsap.DOMTarget,
+                    trigger: container,
                     start: 'top 85%',
                     toggleActions: 'play reverse play reverse',
-                    ...(toVars.scrollTrigger as object),
+                    ...(toVars.scrollTrigger as any),
                 },
             }),
         );
@@ -60,14 +95,16 @@ export class ScrollAnimationService {
     /**
      * Create a timeline with ScrollTrigger.
      */
-    timelineOnScroll(
+    async timelineOnScroll(
         trigger: string | Element,
-        scrollTriggerVars?: ScrollTrigger.Vars,
-    ): gsap.core.Timeline {
+        scrollTriggerVars?: any,
+    ): Promise<gsap.core.Timeline | null> {
+        await this.loadScrollTrigger();
+
         return this.ngZone.runOutsideAngular(() =>
             gsap.timeline({
                 scrollTrigger: {
-                    trigger: trigger as gsap.DOMTarget,
+                    trigger,
                     start: 'top 85%',
                     toggleActions: 'play reverse play reverse',
                     ...scrollTriggerVars,
@@ -77,16 +114,20 @@ export class ScrollAnimationService {
     }
 
     /**
-     * Refresh all ScrollTrigger instances.
+     * Refresh all ScrollTriggers.
      */
-    refresh(): void {
+    async refresh(): Promise<void> {
+        await this.loadScrollTrigger();
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
         ScrollTrigger.refresh();
     }
 
     /**
-     * Kill all ScrollTrigger instances.
+     * Kill all ScrollTriggers.
      */
-    killAll(): void {
+    async killAll(): Promise<void> {
+        await this.loadScrollTrigger();
+        const { ScrollTrigger } = await import('gsap/ScrollTrigger');
         ScrollTrigger.killAll();
     }
 }
