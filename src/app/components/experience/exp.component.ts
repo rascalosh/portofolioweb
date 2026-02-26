@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, afterNextRender } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { EXPERIENCES } from '../../data/portfolio-data';
 import { ScrollAnimationService } from '../../services/scroll-animation.service';
