@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, afterNextRender } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { EXPERIENCES } from '../../data/portfolio-data';
 import { ScrollAnimationService } from '../../services/scroll-animation.service';
@@ -8,33 +8,27 @@ import { ScrollAnimationService } from '../../services/scroll-animation.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'exp.html',
 })
-export class ExperienceComponent {
+export class ExperienceComponent implements AfterViewInit {
   private readonly themeService = inject(ThemeService);
   private readonly scrollAnim = inject(ScrollAnimationService);
 
   protected readonly isDark = this.themeService.isDark;
   protected readonly experiences = EXPERIENCES;
 
+  ngAfterViewInit(): void {
+    this.scrollAnim.animateOnScroll(
+      '#experience .text-center',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
+      '#experience',
+    );
 
-  constructor() {
-    afterNextRender(() => {
-
-      this.scrollAnim.animateOnScroll(
-        '#experience .text-center',
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-        '#experience',
-      );
-
-      // Timeline cards stagger from left
-      this.scrollAnim.staggerOnScroll(
-        '#experience .space-y-10',
-        '> .relative',
-        { x: -50, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
-        0.2,
-      );
-    });
+    this.scrollAnim.staggerOnScroll(
+      '#experience .space-y-10',
+      '> .relative',
+      { x: -50, opacity: 0 },
+      { x: 0, opacity: 1, duration: 0.7, ease: 'power2.out' },
+      0.2,
+    );
   }
 }
-

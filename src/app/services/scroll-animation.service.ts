@@ -22,11 +22,11 @@ export class ScrollAnimationService {
             gsap.fromTo(elements, fromVars, {
                 ...toVars,
                 scrollTrigger: {
-                    trigger: (triggerElement as any) ?? (elements as any),
+                    trigger: (triggerElement as gsap.DOMTarget) ?? (elements as gsap.DOMTarget),
                     start: 'top 85%',
                     end: 'bottom 20%',
                     toggleActions: 'play reverse play reverse',
-                    ...(toVars.scrollTrigger as any),
+                    ...(toVars.scrollTrigger as object),
                 },
             }),
         );
@@ -42,15 +42,16 @@ export class ScrollAnimationService {
         toVars: gsap.TweenVars,
         stagger = 0.1,
     ): gsap.core.Tween {
+        const selector = `${container} ${children}`;
         return this.ngZone.runOutsideAngular(() =>
-            gsap.fromTo(`${container} ${children}`, fromVars, {
+            gsap.fromTo(selector, fromVars, {
                 ...toVars,
                 stagger,
                 scrollTrigger: {
-                    trigger: container as any,
+                    trigger: container as gsap.DOMTarget,
                     start: 'top 85%',
                     toggleActions: 'play reverse play reverse',
-                    ...(toVars.scrollTrigger as any),
+                    ...(toVars.scrollTrigger as object),
                 },
             }),
         );
@@ -66,7 +67,7 @@ export class ScrollAnimationService {
         return this.ngZone.runOutsideAngular(() =>
             gsap.timeline({
                 scrollTrigger: {
-                    trigger: trigger as any,
+                    trigger: trigger as gsap.DOMTarget,
                     start: 'top 85%',
                     toggleActions: 'play reverse play reverse',
                     ...scrollTriggerVars,
@@ -83,7 +84,7 @@ export class ScrollAnimationService {
     }
 
     /**
-     * Kill all ScrollTrigger instances — call on destroy if needed.
+     * Kill all ScrollTrigger instances.
      */
     killAll(): void {
         ScrollTrigger.killAll();

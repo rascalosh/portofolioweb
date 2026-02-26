@@ -9,6 +9,7 @@ import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
 import { KeyboardNavService } from './services/keyboard-nav.service';
+import { ScrollAnimationService } from './services/scroll-animation.service';
 
 @Component({
   selector: 'app-root',
@@ -40,9 +41,13 @@ import { KeyboardNavService } from './services/keyboard-nav.service';
 })
 export class App implements AfterViewInit {
   private readonly keyboardNav = inject(KeyboardNavService);
+  private readonly scrollAnim = inject(ScrollAnimationService);
 
   ngAfterViewInit(): void {
     this.keyboardNav.init();
+
+    setTimeout(() => {
+      this.scrollAnim.refresh();
+    }, 500);
   }
 }
-
