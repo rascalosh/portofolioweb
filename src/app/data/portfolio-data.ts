@@ -146,17 +146,45 @@ export const SKILLS: readonly Skill[] = [
 
 export const PROJECTS: readonly Project[] = [
     {
+        id: 'neuropulse',
+        kind: 'Web App',
+        category: 'web',
+        title: 'NeuroPulse',
+        problem: 'An ADHD companion that breaks big tasks into tiny steps, rewards progress, and adapts to your energy instead of demanding the reverse.',
+        outcome: '16th of 50 teams in the track',
+        media: {
+            type: 'image',
+            src: 'assets/projects/neuropulse.png',
+            alt: 'NeuroPulse landing page: the headline "Work with your brain, not against it." beside a friendly 3D brain mascot, with Start Now and sign-in buttons.',
+            width: 1384,
+            height: 605,
+        },
+        specs: [
+            { label: 'Role', value: 'AI Engineer' },
+            { label: 'Stack', value: 'Next.js, FastAPI' },
+            { label: 'Features', value: 'Task breaker, focus tracker' },
+            { label: 'Languages', value: 'Indonesian, English' },
+            { label: 'Origin', value: 'Hackathon project' },
+            // TODO: Team size.
+        ],
+        tags: ['Next.js', 'FastAPI', 'AI', 'Hackathon'],
+        demoUrl: 'https://neuropulse-web-ten.vercel.app/',
+        // TODO: sourceUrl if the code is public.
+    },
+    {
         id: 'depression-classification',
         kind: 'Research',
         category: 'ai',
         title: 'Depression Classification from Facial Expressions',
         problem: 'Can a lightweight deep learning model screen for depression from facial expressions?',
-        outcome: null, // TODO: accuracy or another real result from the study
+        outcome: '83% accuracy, 0.82 macro F1 on 935 test images',
         media: null, // TODO: figure, confusion matrix or poster. Save to public/assets/projects/ and describe it in `alt`.
         specs: [
             { label: 'Task', value: 'Depression screening from facial expressions' },
             { label: 'Model', value: 'EfficientNetB3, lightweight' },
             { label: 'Stack', value: 'PyTorch, Python' },
+            { label: 'Accuracy', value: '0.83' },
+            { label: 'F1-score', value: '0.84 neutral, 0.81 depressed' },
             { label: 'Team', value: '5 people, UMN Informatics' },
         ],
         tags: ['PyTorch', 'Python', 'EfficientNetB3', 'CalmScope'],
@@ -169,7 +197,13 @@ export const PROJECTS: readonly Project[] = [
         title: 'MindLens',
         problem: 'Support early detection of depression and mental well-being through daily journaling and mood tracking.',
         outcome: null, // TODO: users, features shipped, or another real result
-        media: null, // TODO: app screenshot or short screen recording
+        media: {
+            type: 'image',
+            src: 'assets/projects/mindlens.jpg',
+            alt: 'MindLens presentation slide on a green background: the title, the line "Daily journaling and mood tracking, kept safe behind a lock", and a phone showing the onboarding screen "Diary with lock".',
+            width: 1280,
+            height: 800,
+        },
         specs: [
             { label: 'Platform', value: 'Android' },
             { label: 'Stack', value: 'Kotlin, Jetpack Compose' },
@@ -235,7 +269,13 @@ export const PROJECTS: readonly Project[] = [
         title: 'Maze Runner',
         problem: 'A college game project: control a character through a 3D maze and find the exit.',
         outcome: null, // TODO: plays, feedback, or another real result
-        media: null, // TODO: gameplay GIF or screenshot
+        media: {
+            type: 'image',
+            src: 'assets/projects/maze-runner.png',
+            alt: 'Maze Runner game logo: the title in bold beige letters over a diamond-shaped stone maze.',
+            width: 347,
+            height: 234,
+        }, // TODO: swap for a gameplay GIF or screenshot
         specs: [
             { label: 'Engine', value: 'Unity' },
             { label: 'Language', value: 'C#' },

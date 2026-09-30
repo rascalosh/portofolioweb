@@ -31,7 +31,7 @@ import { Media } from '../../data/portfolio-data';
           [attr.height]="m.height"
           loading="lazy"
           decoding="async"
-          class="size-full object-cover transition-transform duration-300 ease-out group-hover/card:scale-[1.02]"
+          class="size-full object-contain transition-transform duration-300 ease-out group-hover/card:scale-[1.02]"
         />
       } @else {
         <video
