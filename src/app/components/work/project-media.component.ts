@@ -18,7 +18,7 @@ import { Media } from '../../data/portfolio-data';
   selector: 'app-project-media',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'relative block aspect-[16/10] overflow-hidden bg-muted data-[empty]:aspect-[16/7]',
+    class: 'relative block aspect-[16/10] overflow-hidden bg-muted data-[empty]:aspect-[16/4]',
     '[attr.data-empty]': 'media() ? null : ""',
   },
   template: `
@@ -31,7 +31,7 @@ import { Media } from '../../data/portfolio-data';
           [attr.height]="m.height"
           loading="lazy"
           decoding="async"
-          class="size-full object-contain transition-transform duration-300 ease-out group-hover/card:scale-[1.02]"
+          class="size-full object-contain transition-transform duration-200 ease-out group-hover/card:scale-[1.02]"
         />
       } @else {
         <video

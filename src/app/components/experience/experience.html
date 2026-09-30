@@ -1,31 +1,30 @@
 <section id="experience" class="section-y px-6" aria-labelledby="experience-heading">
     <div class="mx-auto max-w-6xl">
-        <p class="text-meta text-muted-foreground">Experience · {{ total }} roles</p>
-        <h2 id="experience-heading" class="text-heading mt-3">Experience</h2>
+        <h2 id="experience-heading" class="text-heading">Experience<span class="sr-only"> ({{ total }} roles)</span></h2>
 
-        <div class="mt-12 max-w-4xl space-y-16">
+        <div class="mt-12 space-y-16">
             @for (group of groups; track group.id) {
-            <section [attr.aria-labelledby]="'experience-group-' + group.id">
-                <h3 [id]="'experience-group-' + group.id" class="text-lg font-semibold tracking-tight">
+            <section [attr.aria-labelledby]="'experience-group-' + group.id" class="lg:grid lg:grid-cols-[15rem_1fr] lg:gap-10">
+                <h3 [id]="'experience-group-' + group.id" class="text-2xl lg:sticky lg:top-24 lg:self-start">
                     {{ group.label }}
                 </h3>
 
                 <ol class="ml-1 mt-6 border-l">
                     @for (role of group.roles; track role.id) {
                     <li [id]="'experience-' + role.id" data-reveal
-                        class="relative ml-6 rounded-xl p-4 ring-active md:p-5 data-[highlighted]:ring-2"
+                        class="relative ml-6 rounded-sm p-4 md:p-5 data-[highlighted]:outline data-[highlighted]:outline-2 data-[highlighted]:outline-foreground"
                         [attr.data-highlighted]="isHighlighted(role.id) ? '' : null">
                         <span class="absolute -left-6 top-9 h-px w-6 bg-border" aria-hidden="true"></span>
 
                         <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
                             <div>
-                                <h4 class="text-lg font-semibold tracking-tight">{{ role.role }}</h4>
+                                <h4 [class]="role.current ? 'font-serif text-3xl' : 'font-serif text-xl'">{{ role.role }}</h4>
                                 <p class="text-[0.9375rem] text-muted-foreground">{{ role.company }}</p>
                             </div>
                             <p class="text-meta text-muted-foreground">
                                 {{ role.duration }}
                                 @if (role.current) {
-                                <span class="ml-2 rounded-full border px-2 py-0.5 text-foreground">Current</span>
+                                <span class="ml-2 bg-active px-2 py-0.5 text-active-foreground">Current</span>
                                 }
                             </p>
                         </div>
@@ -37,7 +36,7 @@
                             @for (segments of role.achievementSegments; track $index) {
                             <li class="flex gap-3">
                                 <span class="mt-2.5 h-px w-3 shrink-0 bg-foreground/40" aria-hidden="true"></span>
-                                <span>@for (part of segments; track $index) {<span [class.font-mono]="part.number" [class.font-semibold]="part.number" [class.tabular-nums]="part.number">{{ part.text }}</span>}</span>
+                                <span>@for (part of segments; track $index) {<span>{{ part.text }}</span>}</span>
                             </li>
                             }
                         </ul>

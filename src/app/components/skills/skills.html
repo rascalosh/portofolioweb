@@ -1,18 +1,17 @@
 <section id="skills" class="section-y px-6" aria-labelledby="skills-heading">
     <div class="mx-auto max-w-6xl">
-        <p class="text-meta text-muted-foreground">Skills · {{ total }} skills</p>
-        <h2 id="skills-heading" class="text-heading mt-3">Skills</h2>
+        <h2 id="skills-heading" class="text-heading">Skills<span class="sr-only"> ({{ total }})</span></h2>
 
         <div class="mt-12 border-t">
             @for (level of levels; track level.id) {
-            <div class="grid gap-4 border-b py-8 md:grid-cols-[14rem_1fr] md:gap-8">
-                <h3 class="text-lg font-semibold tracking-tight">{{ level.label }}</h3>
+            <div class="grid gap-4 border-b py-8 md:grid-cols-[18rem_1fr] md:gap-8">
+                <h3 [class]="level.id === 'strong' ? 'text-4xl md:text-5xl' : 'text-2xl text-muted-foreground'">{{ level.label }}</h3>
                 <ul class="flex flex-wrap gap-x-2 gap-y-3">
                     @for (skill of level.skills; track skill.name) {
                     <li>
                         @if (skill.usable) {
                         <button hlmBadge variant="outline" type="button"
-                            class="font-mono relative overflow-visible after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-[''] hover:border-active aria-pressed:border-transparent aria-pressed:bg-active aria-pressed:text-white dark:aria-pressed:text-background data-[level=strong]:h-10 data-[level=strong]:px-4 data-[level=strong]:text-[0.9375rem] data-[level=comfortable]:h-9 data-[level=comfortable]:px-3.5 data-[level=comfortable]:text-[0.875rem] data-[level=familiar]:h-8 data-[level=familiar]:px-3 data-[level=familiar]:text-[0.8125rem]"
+                            class="font-mono relative overflow-visible after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-[''] hover:border-foreground aria-pressed:border-foreground aria-pressed:bg-active aria-pressed:text-active-foreground data-[level=strong]:h-10 data-[level=strong]:px-4 data-[level=strong]:text-[0.9375rem] data-[level=comfortable]:h-9 data-[level=comfortable]:px-3.5 data-[level=comfortable]:text-[0.875rem] data-[level=familiar]:h-8 data-[level=familiar]:px-3 data-[level=familiar]:text-[0.8125rem]"
                             [attr.data-level]="level.id" [attr.aria-pressed]="focus.pinnedSkill() === skill.name"
                             (click)="focus.togglePin(skill.name)"
                             (pointerenter)="preview($event, skill.name)" (pointerleave)="preview($event, null)">

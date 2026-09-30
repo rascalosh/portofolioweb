@@ -1,12 +1,10 @@
-<section id="hero" class="px-6 pb-16 pt-28 md:pb-24 md:pt-36" aria-labelledby="hero-heading">
-    <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.25fr_1fr]">
+<section id="hero" class="px-6 pb-16 pt-32 md:pb-24 md:pt-44" aria-labelledby="hero-heading">
+    <div class="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1.6fr_1fr]">
 
         <div>
-            <span hlmBadge variant="outline" class="text-meta mb-6 h-auto px-3 py-1">{{ hero.status }}</span>
-
             <h1 id="hero-heading" class="text-display">{{ hero.name }}</h1>
-            <p class="mt-4 text-xl font-medium sm:text-2xl">{{ hero.title }}</p>
-            <p class="mt-6 max-w-xl text-lg text-muted-foreground">{{ hero.bio }}</p>
+            <p class="mt-6 text-xl font-semibold sm:text-2xl">{{ hero.title }}</p>
+            <p class="mt-4 max-w-xl text-lg text-muted-foreground">{{ hero.bio }}</p>
 
             @if (hero.now; as now) {
             <p class="mt-5 max-w-xl text-[0.9375rem]">
@@ -15,7 +13,7 @@
             }
 
             <div class="mt-10 flex flex-wrap items-center gap-3">
-                <a hlmBtn size="lg" href="#work">View Projects</a>
+                <a hlmBtn size="lg" class="bg-active text-active-foreground hover:bg-active/85" href="#work">View Projects</a>
                 <a hlmBtn size="lg" variant="outline" href="#contact">Get in Touch</a>
                 <a hlmBtn size="lg" variant="outline" [href]="cvUrl" download>Download CV</a>
             </div>
@@ -34,8 +32,16 @@
                 </li>
                 }
             </ul>
+
+            <p class="text-meta mt-6 flex items-center gap-3">
+                <span class="size-2.5 shrink-0 bg-active outline outline-1 outline-foreground/60" aria-hidden="true"></span>
+                {{ hero.status }}
+            </p>
         </div>
 
-        <app-id-card />
+        <!-- Centred against the text column so the whole card, and its flip button, stay in the first viewport -->
+        <div class="lg:self-center">
+            <app-id-card />
+        </div>
     </div>
 </section>

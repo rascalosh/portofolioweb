@@ -35,8 +35,6 @@ export class IdCardComponent {
   protected readonly content: CardContent = {
     name: HERO_DATA.name,
     title: HERO_DATA.title,
-    school: HERO_DATA.school,
-    program: HERO_DATA.program,
     status: HERO_DATA.status,
     now: HERO_DATA.now,
     email: SOCIAL_LINKS.find((link) => link.label === 'Email')?.displayValue ?? '',

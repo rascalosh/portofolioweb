@@ -1,41 +1,48 @@
 <section id="work" class="section-y px-6" aria-labelledby="work-heading">
     <div class="mx-auto max-w-6xl">
-        <p class="text-meta text-muted-foreground">Work · {{ count() }}</p>
-        <h2 id="work-heading" class="text-heading mt-3">Selected Work</h2>
+        <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
+            <h2 id="work-heading" class="text-heading">Selected Work</h2>
 
-        <hlm-toggle-group type="single" [value]="filter()" (valueChange)="setFilter($event)" (keydown)="onFilterKey($event)" [spacing]="2"
-            class="mt-8 flex-wrap" aria-label="Filter projects by category">
-            @for (item of filters; track item.id) {
-            <button hlmToggleGroupItem [value]="item.id" type="button" [attr.tabindex]="filter() === item.id ? 0 : -1"
-                class="h-11 rounded-full border px-5 text-[0.9375rem] font-medium data-[state=on]:border-transparent data-[state=on]:bg-active data-[state=on]:text-white dark:data-[state=on]:text-background">
-                {{ item.label }}
-            </button>
-            }
-        </hlm-toggle-group>
+            <hlm-toggle-group type="single" [value]="filter()" (valueChange)="setFilter($event)" (keydown)="onFilterKey($event)" [spacing]="2"
+                class="flex-wrap" aria-label="Filter projects by category">
+                @for (item of filters; track item.id) {
+                <button hlmToggleGroupItem [value]="item.id" type="button" [attr.tabindex]="filter() === item.id ? 0 : -1"
+                    class="h-11 rounded-sm border px-5 text-[0.9375rem] font-medium data-[state=on]:border-foreground data-[state=on]:bg-active data-[state=on]:text-active-foreground">
+                    {{ item.label }}
+                </button>
+                }
+            </hlm-toggle-group>
+        </div>
         <p class="sr-only" aria-live="polite">Showing {{ count() }}</p>
 
-        <div class="mt-10 grid gap-4 md:grid-cols-2">
+        <div class="mt-10 grid gap-4 md:grid-cols-12">
             @for (project of visible(); track project.id) {
+            <!-- Full-width cards (the lead, and a card left alone on its row) put the media beside the text -->
+            @let lead = span($index, visible().length) === 'md:col-span-12';
             <article hlmCard [id]="'project-' + project.id"
-                class="group/card h-full gap-0 py-0 transition-shadow duration-300 hover:ring-foreground/25 data-[highlighted]:ring-2 data-[highlighted]:ring-active"
+                class="group/card h-full gap-0 py-0 transition-colors duration-150 hover:border-foreground data-[highlighted]:border-foreground data-[highlighted]:outline data-[highlighted]:outline-2 data-[highlighted]:outline-foreground"
+                [class]="span($index, visible().length)" [class.md:flex-row]="lead"
                 [attr.data-highlighted]="isHighlighted(project.id) ? '' : null"
                 [style.view-transition-name]="'project-' + project.id">
-                <app-project-media [media]="project.media" [mark]="mark(project.category)" />
+                <app-project-media [media]="project.media" [mark]="mark(project.category)"
+                    [class.md:w-[58%]]="lead" [class.md:shrink-0]="lead" [class.md:aspect-auto]="lead" />
 
-                <div class="flex flex-1 flex-col gap-5 p-6">
+                <div class="flex flex-1 flex-col gap-5 p-6" [class.md:p-8]="lead">
                     <div>
-                        <p class="text-meta text-muted-foreground">{{ project.kind }}</p>
-                        <h3 class="mt-1 text-xl font-semibold tracking-tight">{{ project.title }}</h3>
+                        <h3 class="text-2xl" [class.md:text-4xl]="$index === 0">{{ project.title }}</h3>
                         <p class="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">{{ project.problem }}</p>
                     </div>
 
                     @if (project.outcome; as outcome) {
                     <p class="text-[0.9375rem] font-medium">
-                        <span class="text-meta block font-normal text-muted-foreground">Outcome</span>{{ outcome }}
+                        <span class="sr-only">Outcome: </span>
+                        <span class="inline bg-active px-1.5 py-0.5 text-active-foreground [box-decoration-break:clone]">{{ outcome }}</span>
                     </p>
                     }
 
-                    <dl class="text-meta mt-auto grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 rounded-lg bg-muted p-4">
+                    <dl class="text-meta mt-auto grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 rounded-sm bg-muted p-4">
+                        <dt class="text-muted-foreground">Type</dt>
+                        <dd>{{ project.kind }}</dd>
                         @for (spec of project.specs; track spec.label) {
                         <dt class="text-muted-foreground">{{ spec.label }}</dt>
                         <dd>{{ spec.value }}</dd>

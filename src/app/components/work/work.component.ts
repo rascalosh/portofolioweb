@@ -53,6 +53,18 @@ export class WorkComponent {
     return CATEGORY_MARK[category];
   }
 
+  /**
+   * Column span on the 12-column grid: the first project leads at full width, the rest alternate 7/5 and 5/7,
+   * and a card left alone on its row fills it.
+   */
+  protected span(index: number, total: number): string {
+    if (index === 0) return 'md:col-span-12';
+    const rest = index - 1;
+    if (rest % 2 === 0 && index === total - 1) return 'md:col-span-12';
+    const wide = (Math.floor(rest / 2) + rest) % 2 === 0;
+    return wide ? 'md:col-span-7' : 'md:col-span-5';
+  }
+
   protected isHighlighted(id: string): boolean {
     return this.focus.isProjectHighlighted(id);
   }

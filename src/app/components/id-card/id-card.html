@@ -4,21 +4,25 @@
         tabindex="0" role="img" [attr.aria-label]="label()" (keydown)="onKey($event)">
 
         <!-- Static card: first paint, and the whole experience without WebGL or with reduced motion -->
-        <div class="absolute inset-0 transition-opacity duration-300 [perspective:1200px]"
+        <div class="absolute inset-0 transition-opacity duration-200 [perspective:1200px]"
             [class.opacity-0]="sceneReady()" aria-hidden="true">
-            <div class="relative size-full transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] [transform-style:preserve-3d]"
+            <div class="relative size-full transition-transform duration-[280ms] ease-[cubic-bezier(.2,.8,.2,1)] [transform-style:preserve-3d]"
                 [style.transform]="showingBack() ? 'rotateY(180deg)' : 'none'">
 
                 <div
-                    class="absolute inset-0 flex flex-col overflow-hidden rounded-[1.6rem] border border-black/10 bg-white p-[5.5%] text-[#1D1D1F] shadow-lg [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
-                    <span class="mx-auto mb-[3.5%] h-1.5 w-[14%] shrink-0 rounded-full bg-[#E5E5EA]"></span>
+                    class="absolute inset-0 flex flex-col items-center overflow-hidden rounded-[1.6rem] border border-black/20 bg-white px-[8%] pb-[7%] pt-[9%] text-center text-[#0E0E0E] shadow-lg [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
+                    <span class="hazard-stripe absolute inset-x-0 top-0 h-2" aria-hidden="true"></span>
+                    <span class="hazard-stripe absolute inset-x-0 bottom-0 h-3" aria-hidden="true"></span>
+                    <span class="absolute left-[6%] top-[19%] size-14 rounded-full border-2 border-[#FFD60A]/50" aria-hidden="true"></span>
+                    <span class="absolute right-[3%] top-[15%] size-12 rounded-full border-2 border-[#FFD60A]/50" aria-hidden="true"></span>
+                    <span class="absolute bottom-[26%] right-[4%] size-14 rounded-full border-2 border-[#FFD60A]/50" aria-hidden="true"></span>
+
                     <img src="assets/foto-card.jpg" alt="" width="1024" height="1536" fetchpriority="high" draggable="false"
-                        class="min-h-0 flex-1 rounded-2xl object-cover object-[50%_28%]" />
-                    <div class="pt-[4%]">
-                        <p class="text-[1.05rem] font-semibold leading-tight tracking-tight">{{ hero.name }}</p>
-                        <p class="mt-1 text-[0.8rem] leading-snug text-[#6E6E73]">{{ hero.title }}</p>
-                        <p class="text-meta mt-2 leading-snug text-[#6E6E73]">{{ hero.school }}</p>
-                    </div>
+                        class="relative mt-[3%] min-h-0 w-[70%] flex-1 border-2 border-[#0E0E0E] object-cover object-[50%_28%]" />
+                    <p class="relative mt-[4%] text-[1.55rem] font-extrabold uppercase leading-none">{{ hero.name.split(' ')[0] }}</p>
+                    <p class="relative text-lg font-bold uppercase leading-tight">{{ hero.name.split(' ').slice(1).join(' ') }}</p>
+                    <p class="relative mt-1 text-[0.55rem] uppercase leading-tight">{{ hero.title }}</p>
+                    <span class="relative mt-[4%] h-[6%] w-[55%] shrink-0 bg-[repeating-linear-gradient(90deg,#0E0E0E_0_3px,transparent_3px_6px,#0E0E0E_6px_11px,transparent_11px_14px)]" aria-hidden="true"></span>
                 </div>
 
                 <div
@@ -29,7 +33,6 @@
                             <p class="text-xl font-semibold leading-tight">{{ hero.name }}</p>
                             <p class="text-sm text-[#A1A1A6]">{{ hero.title }}</p>
                         </div>
-                        <p class="text-meta text-[#A1A1A6]">{{ hero.school }}<br>{{ hero.program }}</p>
                         <p class="text-meta">{{ hero.status }}</p>
                         @if (hero.now; as now) {
                         <p class="text-meta"><span class="text-[#A1A1A6]">Now</span> {{ now }}</p>
@@ -44,10 +47,16 @@
 
         <!-- The WebGL scene mounts here once it is ready -->
         <div data-canvas
-            class="absolute inset-0 transition-opacity duration-300 [filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.16))] dark:[filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.5))]"
+            class="absolute inset-0 transition-opacity duration-200 [filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.16))] dark:[filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.5))]"
             [class.opacity-0]="!sceneReady()"></div>
     </div>
 
-    <button hlmBtn variant="outline" size="sm" type="button" (click)="flip()">Flip Card</button>
+    <button hlmBtn variant="outline" size="icon" type="button" aria-label="Flip card" title="Flip card" (click)="flip()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 315" fill="currentColor" stroke="currentColor"
+            stroke-width="48" stroke-linecap="round" stroke-linejoin="round" class="w-6" aria-hidden="true">
+            <path fill="none" d="M375 215C440 195 488 170 488 140C488 75 385 30 256 30C127 30 30 75 30 140C30 175 90 205 180 218" />
+            <path stroke-width="24" d="M192 165L262 232L192 300Z" />
+        </svg>
+    </button>
     <p class="sr-only" aria-live="polite">{{ announcement() }}</p>
 </div>

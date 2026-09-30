@@ -20,8 +20,6 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 export interface CardContent {
   name: string;
   title: string;
-  school: string;
-  program: string;
   status: string;
   /** What you are working on now; the back shows it only when set. */
   now: string | null;
@@ -55,7 +53,7 @@ const DRAG_RADIANS_PER_PX = 0.0085;
 const DRAG_TILT_LIMIT = 0.6;
 const MAX_SPIN = 20;
 const REST = 0.0008;
-const COLORS = { ink: '#1D1D1F', muted: '#6E6E73', paper: '#FFFFFF', slot: '#E5E5EA', backdrop: '#1D1D1F', onDark: '#F5F5F7', mutedOnDark: '#A1A1A6' };
+const COLORS = { caution: '#FFD60A', ink: '#0E0E0E', muted: '#6E6E73', paper: '#FFFFFF', slot: '#E5E5EA', backdrop: '#1D1D1F', onDark: '#F5F5F7', mutedOnDark: '#A1A1A6' };
 
 export async function createCardScene(options: CardSceneOptions): Promise<CardScene> {
   const { container, photoUrl, content, onFace, onLost } = options;
@@ -365,44 +363,142 @@ function newCanvas(): { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D
 function drawFront(photo: HTMLImageElement, content: CardContent): HTMLCanvasElement {
   const { canvas, ctx } = newCanvas();
   const { width, height } = TEXTURE;
+  const centre = width / 2;
+
+  // Laminated staff pass: white stock, a scatter of yellow seals, hazard stripes top and bottom.
   ctx.fillStyle = COLORS.paper;
   ctx.fillRect(0, 0, width, height);
 
-  // Hairline so the white card reads against a white page
+  for (const [x, y, r] of [[170, 400, 128], [880, 330, 112], [900, 800, 132], [130, 880, 118], [820, 1270, 110], [190, 1300, 104]]) {
+    drawSeal(ctx, x, y, r);
+  }
+
+  hazardBand(ctx, 0, width, 24);
+  hazardBand(ctx, height - 40, width, 40);
+
+  // Hairline so the white card reads against the page
   pathRoundRect(ctx, 2, 2, width - 4, height - 4, (CARD.radius / CARD.width) * width);
-  ctx.strokeStyle = 'rgba(0,0,0,0.10)';
+  ctx.strokeStyle = 'rgba(0,0,0,0.18)';
   ctx.lineWidth = 4;
   ctx.stroke();
 
   // Lanyard slot
-  pathRoundRect(ctx, width / 2 - 70, 46, 140, 26, 13);
+  pathRoundRect(ctx, centre - 70, 58, 140, 26, 13);
   ctx.fillStyle = COLORS.slot;
   ctx.fill();
 
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = COLORS.ink;
+
   // Photo, cropped toward the top so the face sits well in frame
-  const box = { x: 56, y: 104, w: width - 112, h: 1030 };
+  const box = { x: 152, y: 132, w: 720, h: 830 };
   ctx.save();
-  pathRoundRect(ctx, box.x, box.y, box.w, box.h, 36);
+  ctx.beginPath();
+  ctx.rect(box.x, box.y, box.w, box.h);
   ctx.clip();
   const scale = box.w / photo.naturalWidth;
   const drawnHeight = photo.naturalHeight * scale;
-  ctx.drawImage(photo, box.x, box.y - (drawnHeight - box.h) * 0.55, box.w, drawnHeight);
+  ctx.drawImage(photo, box.x, box.y - (drawnHeight - box.h) * 0.4, box.w, drawnHeight);
   ctx.restore();
+  ctx.strokeStyle = COLORS.ink;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(box.x, box.y, box.w, box.h);
 
-  const left = 64;
-  let y = box.y + box.h + 104;
-  ctx.textBaseline = 'alphabetic';
+  // Name, title, barcode
+  const [first, ...rest] = content.name.toUpperCase().split(' ');
   ctx.fillStyle = COLORS.ink;
-  ctx.font = `600 80px ${SANS}`;
-  ctx.fillText(content.name, left, y);
-  y += 68;
-  ctx.fillStyle = COLORS.muted;
-  ctx.font = `400 46px ${SANS}`;
-  ctx.fillText(content.title, left, y);
-  y += 72;
-  ctx.font = `400 40px ${MONO}`;
-  ctx.fillText(content.school, left, y);
+  ctx.font = fitFont(ctx, first, 800, 124, 900, SANS);
+  ctx.fillText(first, centre, 1100);
+  ctx.font = fitFont(ctx, rest.join(' '), 700, 84, 900, SANS);
+  ctx.fillText(rest.join(' '), centre, 1198);
+  ctx.font = fitFont(ctx, content.title.toUpperCase(), 500, 40, 820, SANS);
+  ctx.fillText(content.title.toUpperCase(), centre, 1288);
+  drawBarcode(ctx, content.name, 232, 1348, 560, 108);
+
+  ctx.textAlign = 'start';
   return canvas;
+}
+
+/** A yellow roundel with a ring of small print, printed faintly behind the card's content. */
+function drawSeal(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number): void {
+  ctx.save();
+  ctx.globalAlpha = 0.42;
+  ctx.strokeStyle = COLORS.caution;
+  ctx.fillStyle = COLORS.caution;
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.62, 0, Math.PI * 2);
+  ctx.stroke();
+
+  const ring = 'FULL-STACK · AI ENGINEER · PORTFOLIO · ';
+  ctx.font = `700 ${Math.round(r * 0.2)}px ${SANS}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  const radius = r * 0.81;
+  const step = (Math.PI * 2) / ring.length;
+  for (let i = 0; i < ring.length; i++) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-Math.PI / 2 + step * i);
+    ctx.translate(0, -radius);
+    ctx.fillText(ring[i], 0, 0);
+    ctx.restore();
+  }
+  ctx.font = `800 ${Math.round(r * 0.42)}px ${SANS}`;
+  ctx.fillText('WB.', cx, cy);
+  ctx.restore();
+}
+
+/** Diagonal caution stripes across a band, the same motif as the site's header edge. */
+function hazardBand(ctx: CanvasRenderingContext2D, y: number, width: number, thickness: number): void {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, y, width, thickness);
+  ctx.clip();
+  ctx.fillStyle = COLORS.caution;
+  ctx.fillRect(0, y, width, thickness);
+  ctx.fillStyle = COLORS.ink;
+  const stripe = thickness * 0.9;
+  for (let x = -thickness; x < width + thickness; x += stripe * 2) {
+    ctx.beginPath();
+    ctx.moveTo(x, y + thickness);
+    ctx.lineTo(x + stripe, y + thickness);
+    ctx.lineTo(x + stripe + thickness, y);
+    ctx.lineTo(x + thickness, y);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** Decorative barcode derived from the name, so it is stable between loads. It encodes nothing. */
+function drawBarcode(ctx: CanvasRenderingContext2D, seed: string, x: number, y: number, w: number, h: number): void {
+  let state = 0;
+  for (const char of seed) state = (state * 31 + char.charCodeAt(0)) >>> 0;
+  ctx.fillStyle = COLORS.ink;
+  let cursor = x;
+  while (cursor < x + w) {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    const bar = 3 + (state % 4) * 3;
+    const gap = 3 + ((state >>> 8) % 3) * 3;
+    ctx.fillRect(cursor, y, Math.min(bar, x + w - cursor), h);
+    cursor += bar + gap;
+  }
+}
+
+/** Largest font size, up to `max`, at which the text fits `maxWidth`. */
+function fitFont(ctx: CanvasRenderingContext2D, text: string, weight: number, max: number, maxWidth: number, family: string): string {
+  let size = max;
+  ctx.font = `${weight} ${size}px ${family}`;
+  while (size > 16 && ctx.measureText(text).width > maxWidth) {
+    size -= 2;
+    ctx.font = `${weight} ${size}px ${family}`;
+  }
+  return ctx.font;
 }
 
 function drawBack(content: CardContent): HTMLCanvasElement {
@@ -422,10 +518,6 @@ function drawBack(content: CardContent): HTMLCanvasElement {
   ctx.fillStyle = COLORS.mutedOnDark;
   ctx.font = `400 44px ${SANS}`;
   ctx.fillText(content.title, left, 690);
-
-  ctx.font = `400 40px ${MONO}`;
-  ctx.fillText(content.school, left, 800);
-  ctx.fillText(content.program, left, 856);
 
   ctx.fillStyle = COLORS.onDark;
   ctx.font = `400 36px ${MONO}`;
@@ -487,6 +579,7 @@ async function loadImage(url: string): Promise<HTMLImageElement> {
 
 async function loadFonts(): Promise<void> {
   await Promise.all([
+    document.fonts.load(`500 76px ${SANS}`),
     document.fonts.load(`600 80px ${SANS}`),
     document.fonts.load(`700 150px ${SANS}`),
     document.fonts.load(`400 36px ${SANS}`),

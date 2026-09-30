@@ -1,17 +1,18 @@
 <a href="#main-content"
-    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-primary-foreground">
+    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-sm focus:bg-primary focus:px-5 focus:py-3 focus:text-primary-foreground">
     Skip to Content
 </a>
 
 <header class="scroll-edge fixed inset-x-0 top-0 z-50" [attr.data-scrolled]="scrolled()">
+    <div class="hazard-stripe h-1.5" aria-hidden="true"></div>
     <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-6">
-        <a href="#hero" class="-mx-2 flex h-11 items-center px-2 text-lg font-semibold tracking-tight">WB.<span
+        <a href="#hero" class="-mx-2 flex h-11 items-center px-2 font-serif text-xl tracking-tight">WB.<span
                 class="sr-only">, Willbert Budi Lian, back to top</span></a>
 
         <nav class="ml-auto hidden items-center gap-1 md:flex" aria-label="Main">
             @for (link of navLinks; track link.fragment) {
             <a [href]="'#' + link.fragment"
-                class="flex h-11 items-center rounded-full px-4 text-[0.9375rem] font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground aria-[current]:bg-muted aria-[current]:text-foreground"
+                class="flex h-11 items-center rounded-sm px-4 text-[0.9375rem] font-medium text-muted-foreground transition-colors duration-150 hover:text-foreground aria-[current]:bg-active aria-[current]:text-active-foreground"
                 [attr.aria-current]="activeFragment() === link.fragment ? 'location' : null">
                 {{ link.label }}
             </a>
