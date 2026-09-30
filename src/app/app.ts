@@ -1,15 +1,12 @@
-import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ContactComponent } from './components/contact/contact.component';
+import { ExperienceComponent } from './components/experience/experience.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HeroComponent } from './components/hero/hero.component';
-import { AboutComponent } from './components/about/about.component';
 import { SkillsComponent } from './components/skills/skills.component';
-import { ProjectsComponent } from './components/projects/projects.component';
-import { ExperienceComponent } from './components/experience/exp.component';
-import { ContactComponent } from './components/contact/contact.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
-import { KeyboardNavService } from './services/keyboard-nav.service';
-import { ScrollAnimationService } from './services/scroll-animation.service';
+import { WorkComponent } from './components/work/work.component';
+import { ActiveSectionService } from './services/active-section.service';
 
 @Component({
   selector: 'app-root',
@@ -17,37 +14,28 @@ import { ScrollAnimationService } from './services/scroll-animation.service';
   imports: [
     HeaderComponent,
     HeroComponent,
-    AboutComponent,
+    WorkComponent,
     SkillsComponent,
-    ProjectsComponent,
     ExperienceComponent,
     ContactComponent,
     FooterComponent,
-    ScrollTopComponent,
   ],
   template: `
     <app-header />
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       <app-hero />
-      <app-about />
+      <app-work />
       <app-skills />
-      <app-projects />
-      <app-exp />
+      <app-experience />
       <app-contact />
     </main>
     <app-footer />
-    <app-scroll-top />
   `,
 })
 export class App implements AfterViewInit {
-  private readonly keyboardNav = inject(KeyboardNavService);
-  private readonly scrollAnim = inject(ScrollAnimationService);
+  private readonly activeSection = inject(ActiveSectionService);
 
   ngAfterViewInit(): void {
-    this.keyboardNav.init();
-
-    setTimeout(() => {
-      this.scrollAnim.refresh();
-    }, 500);
+    this.activeSection.init(['hero', 'work', 'skills', 'experience', 'contact']);
   }
 }

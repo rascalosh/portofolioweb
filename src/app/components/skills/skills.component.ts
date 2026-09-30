@@ -1,60 +1,39 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit } from '@angular/core';
-import { ThemeService } from '../../services/theme.service';
-import { SKILLS, Skill } from '../../data/portfolio-data';
-import { ScrollAnimationService } from '../../services/scroll-animation.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideArrowUpRight } from '@ng-icons/lucide';
+import { HlmBadgeImports } from '@spartan-ng/helm/badge';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { EXPERIENCES, PROJECTS, SKILLS, SKILL_GROUPS } from '../../data/portfolio-data';
 
-type SkillCategory = 'all' | Skill['category'];
+interface Evidence {
+  href: string;
+  where: string;
+}
+
+/** The first project, then role, whose tags name this skill. Skills with no match stay plain text. */
+function evidenceFor(skill: string): Evidence | null {
+  const name = skill.toLowerCase();
+  const project = PROJECTS.find((item) => item.tags.some((tag) => tag.toLowerCase() === name));
+  if (project) return { href: `#project-${project.id}`, where: project.title };
+  const role = EXPERIENCES.find((item) => item.tags.some((tag) => tag.toLowerCase() === name));
+  if (role) return { href: `#experience-${role.id}`, where: `${role.role} at ${role.company}` };
+  return null;
+}
 
 @Component({
   selector: 'app-skills',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [NgIcon, HlmBadgeImports, HlmCardImports],
+  providers: [provideIcons({ lucideArrowUpRight })],
   templateUrl: 'skills.html',
 })
-export class SkillsComponent implements AfterViewInit {
-  private readonly themeService = inject(ThemeService);
-  private readonly scrollAnim = inject(ScrollAnimationService);
-
-  protected readonly isDark = this.themeService.isDark;
-  protected readonly activeCategory = signal<SkillCategory>('all');
-
-  protected readonly categories: readonly { value: SkillCategory; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'frontend', label: 'Frontend' },
-    { value: 'backend', label: 'Backend' },
-    { value: 'tools', label: 'Tools' },
-  ];
-
-  protected readonly filteredSkills = computed(() => {
-    const cat = this.activeCategory();
-    if (cat === 'all') return SKILLS;
-    return SKILLS.filter((s) => s.category === cat);
-  });
-
-  protected setCategory(category: SkillCategory): void {
-    this.activeCategory.set(category);
-  }
-
-  ngAfterViewInit(): void {
-    this.scrollAnim.animateOnScroll(
-      '#skills .text-center',
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-      '#skills',
-    );
-
-    this.scrollAnim.animateOnScroll(
-      '#skills [role="tablist"]',
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: '#skills', start: 'top 75%' } },
-    );
-
-    this.scrollAnim.staggerOnScroll(
-      '#skills [role="tabpanel"]',
-      '> div',
-      { y: 30, opacity: 0, scale: 0.9 },
-      { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' },
-      0.05,
-    );
-  }
+export class SkillsComponent {
+  protected readonly groups = SKILL_GROUPS.map((group, index) => ({
+    ...group,
+    span: index < 3 ? 'lg:col-span-2' : 'lg:col-span-3',
+    skills: SKILLS.filter((skill) => skill.group === group.id).map((skill) => ({
+      name: skill.name,
+      evidence: evidenceFor(skill.name),
+    })),
+  }));
 }

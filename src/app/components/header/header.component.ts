@@ -1,40 +1,40 @@
-import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, inject, signal } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideMenu, lucideMoon, lucideSun } from '@ng-icons/lucide';
+import { HlmBadgeImports } from '@spartan-ng/helm/badge';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmSheetImports } from '@spartan-ng/helm/sheet';
+import { HERO_DATA, NAV_LINKS } from '../../data/portfolio-data';
+import { ActiveSectionService } from '../../services/active-section.service';
 import { ThemeService } from '../../services/theme.service';
-import { NAV_LINKS } from '../../data/portfolio-data';
-import { KeyboardNavService } from '../../services/keyboard-nav.service';
 
 @Component({
   selector: 'app-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    'role': 'banner',
-  },
+  imports: [NgIcon, HlmBadgeImports, HlmButtonImports, HlmSheetImports],
+  providers: [provideIcons({ lucideMenu, lucideMoon, lucideSun })],
   templateUrl: 'header.html',
 })
 export class HeaderComponent {
-  private readonly themeService = inject(ThemeService);
-  private readonly keyboardNav = inject(KeyboardNavService);
+  private readonly theme = inject(ThemeService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly isDark = this.themeService.isDark;
+  protected readonly isDark = this.theme.isDark;
+  protected readonly activeFragment = inject(ActiveSectionService).activeFragment;
   protected readonly navLinks = NAV_LINKS;
-  protected readonly mobileMenuOpen = signal(false);
-  protected readonly activeFragment = this.keyboardNav.activeFragment;
+  protected readonly hero = HERO_DATA;
+  protected readonly scrolled = signal(false);
 
-  protected readonly headerClasses = computed(() =>
-    this.isDark()
-      ? 'bg-surface-dark/80 backdrop-blur-xl border-b border-border-dark'
-      : 'bg-surface-light/80 backdrop-blur-xl border-b border-border-light'
-  );
+  constructor() {
+    afterNextRender(() => {
+      const update = () => this.scrolled.set(window.scrollY > 8);
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+      this.destroyRef.onDestroy(() => window.removeEventListener('scroll', update));
+    });
+  }
 
   protected toggleTheme(): void {
-    this.themeService.toggle();
-  }
-
-  protected toggleMobileMenu(): void {
-    this.mobileMenuOpen.update((v) => !v);
-  }
-
-  protected closeMobileMenu(): void {
-    this.mobileMenuOpen.set(false);
+    this.theme.toggle();
   }
 }

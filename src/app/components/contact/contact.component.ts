@@ -1,34 +1,55 @@
-import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
-import { ThemeService } from '../../services/theme.service';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideCheck, lucideCopy } from '@ng-icons/lucide';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { SOCIAL_LINKS } from '../../data/portfolio-data';
-import { ScrollAnimationService } from '../../services/scroll-animation.service';
+
+const IDLE_LABEL = 'Copy Email';
+const RESET_MS = 2000;
 
 @Component({
   selector: 'app-contact',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgIcon, HlmButtonImports],
+  providers: [provideIcons({ lucideCheck, lucideCopy })],
   templateUrl: 'contact.html',
-  styleUrl: 'contact.css',
 })
-export class ContactComponent implements AfterViewInit {
-  private readonly themeService = inject(ThemeService);
-  private readonly scrollAnim = inject(ScrollAnimationService);
-  protected readonly isDark = this.themeService.isDark;
-  protected readonly socialLinks = SOCIAL_LINKS;
+export class ContactComponent {
+  private readonly emailElement = viewChild.required<ElementRef<HTMLElement>>('emailText');
 
-  ngAfterViewInit(): void {
-    this.scrollAnim.animateOnScroll(
-      '#contact .text-center',
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-      '#contact',
-    );
+  protected readonly email = SOCIAL_LINKS.find((link) => link.label === 'Email')!;
+  protected readonly profileLinks = SOCIAL_LINKS.filter((link) => link.label !== 'Email');
 
-    this.scrollAnim.staggerOnScroll(
-      '#contact .grid',
-      '> a',
-      { y: 40, opacity: 0, scale: 0.9 },
-      { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.2)' },
-      0.12,
-    );
+  protected readonly label = signal(IDLE_LABEL);
+  protected readonly done = computed(() => this.label() !== IDLE_LABEL);
+  /** Read out by screen readers through a live region. */
+  protected readonly announcement = signal('');
+
+  private resetTimer?: ReturnType<typeof setTimeout>;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.resetTimer));
+  }
+
+  protected async copyEmail(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.email.displayValue);
+      this.show('Copied', 'Email address copied to the clipboard');
+    } catch {
+      // No clipboard access (insecure context or blocked): select the text so Ctrl+C or Cmd+C works.
+      const range = document.createRange();
+      range.selectNodeContents(this.emailElement().nativeElement);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      this.show('Email Selected', 'Email address selected. Press Control C to copy it.');
+    }
+  }
+
+  private show(label: string, announcement: string): void {
+    this.label.set(label);
+    this.announcement.set(announcement);
+    clearTimeout(this.resetTimer);
+    this.resetTimer = setTimeout(() => this.label.set(IDLE_LABEL), RESET_MS);
   }
 }

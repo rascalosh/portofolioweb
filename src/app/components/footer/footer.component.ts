@@ -1,6 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { ThemeService } from '../../services/theme.service';
-import { SOCIAL_LINKS } from '../../data/portfolio-data';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { HERO_DATA } from '../../data/portfolio-data';
 
 @Component({
   selector: 'app-footer',
@@ -8,8 +7,6 @@ import { SOCIAL_LINKS } from '../../data/portfolio-data';
   templateUrl: 'footer.html',
 })
 export class FooterComponent {
-  private readonly themeService = inject(ThemeService);
-
-  protected readonly isDark = this.themeService.isDark;
-  protected readonly socialLinks = SOCIAL_LINKS;
+  protected readonly name = HERO_DATA.name;
+  protected readonly year = new Date().getFullYear();
 }

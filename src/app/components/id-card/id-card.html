@@ -1,0 +1,52 @@
+<div class="flex flex-col items-center gap-5">
+    <div #stage
+        class="relative aspect-[2/3] w-60 cursor-grab touch-pan-y select-none rounded-[1.6rem] outline-offset-8 active:cursor-grabbing sm:w-72 lg:w-80"
+        tabindex="0" role="img" [attr.aria-label]="label()" (keydown)="onKey($event)">
+
+        <!-- Static card: first paint, and the whole experience without WebGL or with reduced motion -->
+        <div class="absolute inset-0 transition-opacity duration-300 [perspective:1200px]"
+            [class.opacity-0]="sceneReady()" aria-hidden="true">
+            <div class="relative size-full transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] [transform-style:preserve-3d]"
+                [style.transform]="showingBack() ? 'rotateY(180deg)' : 'none'">
+
+                <div
+                    class="absolute inset-0 flex flex-col overflow-hidden rounded-[1.6rem] border border-black/10 bg-white p-[5.5%] text-[#1D1D1F] shadow-lg [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
+                    <span class="mx-auto mb-[3.5%] h-1.5 w-[14%] shrink-0 rounded-full bg-[#E5E5EA]"></span>
+                    <img src="assets/foto-card.jpg" alt="" width="1024" height="1536" fetchpriority="high" draggable="false"
+                        class="min-h-0 flex-1 rounded-2xl object-cover object-[50%_28%]" />
+                    <div class="pt-[4%]">
+                        <p class="text-[1.05rem] font-semibold leading-tight tracking-tight">{{ hero.name }}</p>
+                        <p class="mt-1 text-[0.8rem] leading-snug text-[#6E6E73]">{{ hero.title }}</p>
+                        <p class="text-meta mt-2 leading-snug text-[#6E6E73]">{{ hero.school }}</p>
+                    </div>
+                </div>
+
+                <div
+                    class="absolute inset-0 flex flex-col overflow-hidden rounded-[1.6rem] bg-[#1D1D1F] p-[7%] text-[#F5F5F7] shadow-lg [transform:rotateY(180deg)] [-webkit-backface-visibility:hidden] [backface-visibility:hidden]">
+                    <p class="text-4xl font-bold tracking-tight sm:text-5xl">WB.</p>
+                    <div class="mt-auto space-y-3">
+                        <div>
+                            <p class="text-xl font-semibold leading-tight">{{ hero.name }}</p>
+                            <p class="text-sm text-[#A1A1A6]">{{ hero.title }}</p>
+                        </div>
+                        <p class="text-meta text-[#A1A1A6]">{{ hero.school }}<br>{{ hero.program }}</p>
+                        <p class="text-meta flex items-start gap-2">
+                            <span class="mt-1.5 size-2 shrink-0 rounded-full bg-[#30D158]"></span>{{ hero.status }}
+                        </p>
+                        <hr class="border-white/15">
+                        <p class="text-meta break-all">{{ content.email }}<br>{{ content.github }}<br>{{
+                            content.linkedin }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The WebGL scene mounts here once it is ready -->
+        <div data-canvas
+            class="absolute inset-0 transition-opacity duration-300 [filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.16))] dark:[filter:drop-shadow(0_24px_28px_rgb(0_0_0/0.5))]"
+            [class.opacity-0]="!sceneReady()"></div>
+    </div>
+
+    <button hlmBtn variant="outline" size="sm" type="button" (click)="flip()">Flip Card</button>
+    <p class="sr-only" aria-live="polite">{{ announcement() }}</p>
+</div>

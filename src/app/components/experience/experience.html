@@ -1,0 +1,41 @@
+<section id="experience" class="px-6 py-16 md:py-24" aria-labelledby="experience-heading">
+    <div class="mx-auto max-w-6xl">
+    <div class="max-w-4xl">
+        <h2 id="experience-heading" class="text-heading">Experience</h2>
+        <p class="mt-3 max-w-xl text-muted-foreground">Roles across engineering, teaching and student organizations.</p>
+
+        <hlm-accordion type="multiple" class="mt-12 border-t">
+            @for (exp of experiences; track exp.id) {
+            <hlm-accordion-item [id]="'experience-' + exp.id" [isOpened]="exp.current ?? false">
+                <hlm-accordion-trigger triggerClass="text-base">
+                    <span class="flex flex-1 flex-col gap-1 text-start sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                        <span class="flex flex-col">
+                            <span class="text-lg font-semibold tracking-tight">{{ exp.role }}</span>
+                            <span class="text-[0.9375rem] font-normal text-muted-foreground">{{ exp.company }}</span>
+                        </span>
+                        <span class="text-meta font-normal text-muted-foreground">{{ exp.duration }}</span>
+                    </span>
+                </hlm-accordion-trigger>
+                <hlm-accordion-content>
+                    <p class="max-w-2xl text-[0.9375rem] leading-relaxed text-muted-foreground">{{ exp.description }}</p>
+
+                    @if (exp.achievements && exp.achievements.length > 0) {
+                    <ul class="mt-4 max-w-2xl list-disc space-y-1.5 pl-5 text-[0.9375rem] marker:text-muted-foreground">
+                        @for (achievement of exp.achievements; track achievement) {
+                        <li>{{ achievement }}</li>
+                        }
+                    </ul>
+                    }
+
+                    <ul class="mt-5 flex flex-wrap gap-2" aria-label="Tags">
+                        @for (tag of exp.tags; track tag) {
+                        <li><span hlmBadge variant="outline" class="text-meta h-6 px-2.5">{{ tag }}</span></li>
+                        }
+                    </ul>
+                </hlm-accordion-content>
+            </hlm-accordion-item>
+            }
+        </hlm-accordion>
+    </div>
+    </div>
+</section>
