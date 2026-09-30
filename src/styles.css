@@ -4,10 +4,9 @@
 @import 'tailwindcss/utilities.css';
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 
-/* Two colors beyond Spartan's set: --link (links and focus only) and --status (availability dot, always paired with text). */
+/* One color beyond the neutrals: green, and only for what is selected or active (filter, pinned skill, focus). */
 @theme inline {
-  --color-link: var(--link);
-  --color-status: var(--status);
+  --color-active: var(--active);
 }
 
 :root {
@@ -38,10 +37,9 @@
   /* neutral-200 at 80% */
   --border: oklch(0.922 0 0 / 80%);
   --input: oklch(0.922 0 0 / 80%);
-  /* #0066CC: 5.39:1 on the page background */
-  --ring: oklch(0.522 0.177 255.8);
-  --link: oklch(0.522 0.177 255.8);
-  --status: oklch(0.558 0.146 147.5);
+  /* #177235: 5.8:1 on the page background, 5.5:1 on cards and muted surfaces */
+  --ring: oklch(0.486 0.125 149.3);
+  --active: oklch(0.486 0.125 149.3);
 }
 
 :root.dark {
@@ -68,10 +66,9 @@
   /* neutral-800 at 80% */
   --border: oklch(0.269 0 0 / 80%);
   --input: oklch(0.269 0 0 / 80%);
-  /* #2997FF: 6.53:1 on the page background */
-  --ring: oklch(0.669 0.181 251.8);
-  --link: oklch(0.669 0.181 251.8);
-  --status: oklch(0.756 0.208 147);
+  /* #30D158: 9.7:1 on the page background, 8.4:1 on muted surfaces */
+  --ring: oklch(0.756 0.208 147);
+  --active: oklch(0.756 0.208 147);
 }
 
 /* Increase Contrast: darker muted text, solid borders */
@@ -127,13 +124,13 @@
   }
 
   ::selection {
-    background: color-mix(in oklch, var(--link) 25%, transparent);
+    background: color-mix(in oklch, var(--active) 25%, transparent);
   }
 }
 
 /* Type scale: rem throughout so text follows the browser's font size setting */
 @utility text-display {
-  font-size: clamp(2.75rem, 1.5rem + 5vw, 4.5rem);
+  font-size: clamp(2.75rem, 1.4rem + 6vw, 5.5rem);
   line-height: 1.02;
   letter-spacing: -0.035em;
   font-weight: 600;
@@ -144,6 +141,14 @@
   line-height: 1.1;
   letter-spacing: -0.025em;
   font-weight: 600;
+}
+
+/* Vertical rhythm between page sections: 5rem on phones, 7.5rem from md up */
+@utility section-y {
+  padding-block: 5rem;
+  @media (min-width: 48rem) {
+    padding-block: 7.5rem;
+  }
 }
 
 /* Mono metadata: dates, kinds, spec panels. Never below 0.75rem. */
@@ -175,6 +180,17 @@
   }
 }
 
+/* Scroll reveal: content is visible by default. Only when scripts run and motion is allowed does it start hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    transition: opacity 500ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  html.js [data-reveal]:not([data-revealed]) {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
 /* Reduce Motion: no transitions or animations (unlayered so it always wins) */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -184,5 +200,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
   }
 }

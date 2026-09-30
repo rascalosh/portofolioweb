@@ -1,0 +1,13 @@
+# Willbert Budi Lian
+
+> Full-stack developer and AI engineer, and Informatics student at Universitas Multimedia Nusantara, building health-tech software. Open to internships and full-time roles.
+
+## Portfolio
+
+- [Portfolio](https://portofoliowebe.vercel.app/): projects, skills, experience and contact details on one page
+
+## Links
+
+- [GitHub](https://github.com/rascalosh)
+- [LinkedIn](https://linkedin.com/in/willbert-budi-lian)
+- [Email](mailto:lianwillbert@gmail.com)

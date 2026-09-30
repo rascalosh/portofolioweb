@@ -1,34 +1,46 @@
-<section id="skills" class="px-6 py-16 md:py-24" aria-labelledby="skills-heading">
+<section id="skills" class="section-y px-6" aria-labelledby="skills-heading">
     <div class="mx-auto max-w-6xl">
-        <h2 id="skills-heading" class="text-heading">Skills</h2>
-        <p class="mt-3 max-w-xl text-muted-foreground">Linked skills point to the project or role where I used them.</p>
+        <p class="text-meta text-muted-foreground">Skills · {{ total }} skills</p>
+        <h2 id="skills-heading" class="text-heading mt-3">Skills</h2>
 
-        <div class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-            @for (group of groups; track group.id) {
-            <div [class]="group.span">
-                <section hlmCard class="h-full" [attr.aria-labelledby]="'skills-' + group.id">
-                    <div hlmCardHeader>
-                        <h3 hlmCardTitle [id]="'skills-' + group.id" class="text-lg font-semibold tracking-tight">{{ group.label }}</h3>
-                    </div>
-                    <div hlmCardContent>
-                        <ul class="flex flex-wrap gap-x-2 gap-y-3">
-                            @for (skill of group.skills; track skill.name) {
-                            <li>
-                                @if (skill.evidence; as evidence) {
-                                <a hlmBadge variant="outline" [href]="evidence.href"
-                                    class="text-meta relative h-8 gap-1.5 overflow-visible px-3 text-link underline-offset-4 after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-[''] hover:underline"
-                                    [attr.aria-label]="skill.name + ', used in ' + evidence.where">
-                                    {{ skill.name }}<ng-icon name="lucideArrowUpRight" data-icon="inline-end" />
-                                </a>
-                                } @else {
-                                <span hlmBadge variant="secondary" class="text-meta h-8 px-3">{{ skill.name }}</span>
-                                }
-                            </li>
-                            }
-                        </ul>
-                    </div>
-                </section>
+        <div class="mt-12 border-t">
+            @for (level of levels; track level.id) {
+            <div class="grid gap-4 border-b py-8 md:grid-cols-[14rem_1fr] md:gap-8">
+                <h3 class="text-lg font-semibold tracking-tight">{{ level.label }}</h3>
+                <ul class="flex flex-wrap gap-x-2 gap-y-3">
+                    @for (skill of level.skills; track skill.name) {
+                    <li>
+                        @if (skill.usable) {
+                        <button hlmBadge variant="outline" type="button"
+                            class="font-mono relative overflow-visible after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-[''] hover:border-active aria-pressed:border-transparent aria-pressed:bg-active aria-pressed:text-white dark:aria-pressed:text-background data-[level=strong]:h-10 data-[level=strong]:px-4 data-[level=strong]:text-[0.9375rem] data-[level=comfortable]:h-9 data-[level=comfortable]:px-3.5 data-[level=comfortable]:text-[0.875rem] data-[level=familiar]:h-8 data-[level=familiar]:px-3 data-[level=familiar]:text-[0.8125rem]"
+                            [attr.data-level]="level.id" [attr.aria-pressed]="focus.pinnedSkill() === skill.name"
+                            (click)="focus.togglePin(skill.name)"
+                            (pointerenter)="preview($event, skill.name)" (pointerleave)="preview($event, null)">
+                            {{ skill.name }}
+                        </button>
+                        } @else {
+                        <span hlmBadge variant="secondary" class="font-mono data-[level=strong]:h-10 data-[level=strong]:px-4 data-[level=strong]:text-[0.9375rem] data-[level=comfortable]:h-9 data-[level=comfortable]:px-3.5 data-[level=comfortable]:text-[0.875rem] data-[level=familiar]:h-8 data-[level=familiar]:px-3 data-[level=familiar]:text-[0.8125rem]" [attr.data-level]="level.id">{{ skill.name }}</span>
+                        }
+                    </li>
+                    }
+                </ul>
             </div>
+            }
+        </div>
+
+        <!-- Where the chosen skill was used. Announced politely when a skill is pinned. -->
+        <div class="mt-8 min-h-16" aria-live="polite">
+            @if (focus.active(); as skill) {
+            <p class="text-meta text-muted-foreground">{{ skill }} · used in</p>
+            <ul class="mt-1 flex flex-wrap gap-x-5">
+                @for (item of focus.usedIn(); track item.href) {
+                <li>
+                    <a [href]="item.href" class="inline-flex min-h-11 items-center font-medium underline underline-offset-4 hover:text-muted-foreground">{{ item.label }}</a>
+                </li>
+                }
+            </ul>
+            } @else {
+            <p class="text-meta text-muted-foreground">Select a skill to see where I used it.</p>
             }
         </div>
     </div>

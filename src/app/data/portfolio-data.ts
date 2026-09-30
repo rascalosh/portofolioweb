@@ -1,3 +1,5 @@
+// All page content lives here. Anything marked `TODO:` is for you to fill in; while it is `null` it is simply not shown.
+
 export interface NavLink {
     readonly label: string;
     readonly fragment: string;
@@ -8,25 +10,60 @@ export interface Spec {
     readonly value: string;
 }
 
+export type ProjectCategory = 'ai' | 'web' | 'mobile' | 'games';
+
+export const PROJECT_FILTERS: readonly { readonly id: 'all' | ProjectCategory; readonly label: string }[] = [
+    { id: 'all', label: 'All' },
+    { id: 'ai', label: 'AI-ML' },
+    { id: 'web', label: 'Web' },
+    { id: 'mobile', label: 'Mobile' },
+    { id: 'games', label: 'Games' },
+] as const;
+
+/** An image, GIF or short video for a project card. Files go in public/assets/projects/. */
+export interface Media {
+    readonly type: 'image' | 'video';
+    readonly src: string;
+    /** Describe what the picture shows, for screen readers. */
+    readonly alt: string;
+    /** Still frame for video, shown while it loads and under reduced motion. */
+    readonly poster?: string;
+    readonly width: number;
+    readonly height: number;
+}
+
+export interface CaseStudy {
+    readonly problem: string;
+    readonly approach: string;
+    readonly result: string | null;
+    readonly different: string | null;
+}
+
 export interface Project {
     readonly id: string;
     readonly kind: string;
+    readonly category: ProjectCategory;
     readonly title: string;
-    readonly description: string;
+    /** Why it was built, in one line. Derived from the project record; review the wording. */
+    readonly problem: string;
+    /** Metrics or impact. Never guessed: stays null until you have a real number. */
+    readonly outcome: string | null;
+    readonly media: Media | null;
     /** Facts shown in the mono spec panel. Only facts already stated in the project or role record. */
     readonly specs: readonly Spec[];
     readonly tags: readonly string[];
-    readonly liveUrl?: string;
-    /** Button label for liveUrl; defaults to "Live Demo". */
-    readonly liveLabel?: string;
-    readonly repoUrl?: string;
+    readonly sourceUrl?: string;
+    readonly demoUrl?: string;
+    /** Button label for demoUrl; defaults to "Live Demo". */
+    readonly demoLabel?: string;
+    readonly caseStudy?: CaseStudy;
 }
 
-export type SkillGroupId = 'frontend' | 'backend' | 'ai' | 'mobile-games' | 'tools';
+export type SkillLevelId = 'strong' | 'comfortable' | 'familiar';
 
 export interface Skill {
     readonly name: string;
-    readonly group: SkillGroupId;
+    readonly level: SkillLevelId;
 }
 
 export interface SocialLink {
@@ -36,8 +73,11 @@ export interface SocialLink {
     readonly displayValue: string;
 }
 
+export type ExperienceKind = 'technical' | 'leadership';
+
 export interface Experience {
     readonly id: string;
+    readonly kind: ExperienceKind;
     readonly role: string;
     readonly company: string;
     readonly duration: string;
@@ -57,55 +97,62 @@ export const NAV_LINKS: readonly NavLink[] = [
 export const HERO_DATA = {
     name: 'Willbert Budi Lian',
     title: 'Full-Stack Developer & AI Engineer',
-    bio: 'Informatics student at Universitas Multimedia Nusantara. I build web applications, and machine-learning models that solve real-world problems. I am open to internships and full-time roles.',
+    bio: 'I am a passionate full-stack developer and AI engineer with a strong background in building web applications and machine learning models. I enjoy solving complex problems and creating innovative solutions that make a difference.',
+    // TODO: what you are building or learning right now, one short line. Hidden while null.
+    now: null as string | null,
     school: 'Universitas Multimedia Nusantara',
     program: 'Informatics',
     status: 'Open to internships & full-time roles',
     statusShort: 'Open to work',
 } as const;
 
-export const SKILL_GROUPS: readonly { readonly id: SkillGroupId; readonly label: string }[] = [
-    { id: 'frontend', label: 'Frontend' },
-    { id: 'backend', label: 'Backend' },
-    { id: 'ai', label: 'AI / ML' },
-    { id: 'mobile-games', label: 'Mobile & Games' },
-    { id: 'tools', label: 'Tools' },
+// TODO: add your CV as public/cv.pdf. Until then this button returns a 404.
+export const CV_URL = '/cv.pdf';
+
+export const SKILL_LEVELS: readonly { readonly id: SkillLevelId; readonly label: string }[] = [
+    { id: 'strong', label: 'Strong in' },
+    { id: 'comfortable', label: 'Comfortable with' },
+    { id: 'familiar', label: 'Familiar with' },
 ] as const;
 
+// TODO: review this grouping. It is a first draft based on how often each skill appears in your projects and roles.
 export const SKILLS: readonly Skill[] = [
-    { name: 'Angular', group: 'frontend' },
-    { name: 'TypeScript', group: 'frontend' },
-    { name: 'JavaScript', group: 'frontend' },
-    { name: 'React', group: 'frontend' },
-    { name: 'Vue', group: 'frontend' },
-    { name: 'NextJS', group: 'frontend' },
-    { name: 'HTML / CSS', group: 'frontend' },
-    { name: 'Tailwind CSS', group: 'frontend' },
-    { name: 'Node.js', group: 'backend' },
-    { name: 'PHP', group: 'backend' },
-    { name: 'Laravel', group: 'backend' },
-    { name: 'Java', group: 'backend' },
-    { name: 'MySQL', group: 'backend' },
-    { name: 'REST APIs', group: 'backend' },
-    { name: 'Python', group: 'ai' },
-    { name: 'PyTorch', group: 'ai' },
-    { name: 'Tensorflow', group: 'ai' },
-    { name: 'Kotlin', group: 'mobile-games' },
-    { name: 'Unity', group: 'mobile-games' },
-    { name: 'C#', group: 'mobile-games' },
-    { name: 'Git', group: 'tools' },
-    { name: 'Postman', group: 'tools' },
-    { name: 'Figma', group: 'tools' },
-    { name: 'CI/CD', group: 'tools' },
-    { name: 'Trello', group: 'tools' },
+    { name: 'Angular', level: 'strong' },
+    { name: 'TypeScript', level: 'strong' },
+    { name: 'Laravel', level: 'strong' },
+    { name: 'PHP', level: 'strong' },
+    { name: 'Python', level: 'strong' },
+    { name: 'PyTorch', level: 'strong' },
+    { name: 'Kotlin', level: 'strong' },
+    { name: 'JavaScript', level: 'comfortable' },
+    { name: 'Node.js', level: 'comfortable' },
+    { name: 'Tensorflow', level: 'comfortable' },
+    { name: 'MySQL', level: 'comfortable' },
+    { name: 'REST APIs', level: 'comfortable' },
+    { name: 'HTML / CSS', level: 'comfortable' },
+    { name: 'Tailwind CSS', level: 'comfortable' },
+    { name: 'Git', level: 'comfortable' },
+    { name: 'Unity', level: 'comfortable' },
+    { name: 'C#', level: 'comfortable' },
+    { name: 'React', level: 'familiar' },
+    { name: 'Vue', level: 'familiar' },
+    { name: 'NextJS', level: 'familiar' },
+    { name: 'Java', level: 'familiar' },
+    { name: 'Postman', level: 'familiar' },
+    { name: 'Figma', level: 'familiar' },
+    { name: 'CI/CD', level: 'familiar' },
+    { name: 'Trello', level: 'familiar' },
 ] as const;
 
 export const PROJECTS: readonly Project[] = [
     {
         id: 'depression-classification',
         kind: 'Research',
+        category: 'ai',
         title: 'Depression Classification from Facial Expressions',
-        description: 'As part of a 5-person research team in the Informatics Department at Universitas Multimedia Nusantara, I worked on building a lightweight deep learning model to screen for depression from facial expressions.',
+        problem: 'Can a lightweight deep learning model screen for depression from facial expressions?',
+        outcome: null, // TODO: accuracy or another real result from the study
+        media: null, // TODO: figure, confusion matrix or poster. Save to public/assets/projects/ and describe it in `alt`.
         specs: [
             { label: 'Task', value: 'Depression screening from facial expressions' },
             { label: 'Model', value: 'EfficientNetB3, lightweight' },
@@ -113,12 +160,16 @@ export const PROJECTS: readonly Project[] = [
             { label: 'Team', value: '5 people, UMN Informatics' },
         ],
         tags: ['PyTorch', 'Python', 'EfficientNetB3', 'CalmScope'],
+        // TODO: sourceUrl and demoUrl if the work is public.
     },
     {
         id: 'mindlens',
         kind: 'Android App',
+        category: 'mobile',
         title: 'MindLens',
-        description: 'A holistic Android application designed to facilitate early detection of depression and support mental well-being through daily journaling and mood tracking.',
+        problem: 'Support early detection of depression and mental well-being through daily journaling and mood tracking.',
+        outcome: null, // TODO: users, features shipped, or another real result
+        media: null, // TODO: app screenshot or short screen recording
         specs: [
             { label: 'Platform', value: 'Android' },
             { label: 'Stack', value: 'Kotlin, Jetpack Compose' },
@@ -126,13 +177,22 @@ export const PROJECTS: readonly Project[] = [
             { label: 'Features', value: 'Daily journaling, mood tracking' },
         ],
         tags: ['Kotlin', 'Android', 'Supabase', 'Jetpack Compose'],
-        repoUrl: 'https://github.com/henrysalim/mindlens',
+        sourceUrl: 'https://github.com/henrysalim/mindlens',
+        caseStudy: {
+            problem: 'Support early detection of depression and mental well-being through daily journaling and mood tracking.',
+            approach: 'A holistic Android application built with Kotlin and Jetpack Compose, with Supabase as the backend. People write a daily journal entry and record their mood, so patterns become visible over time.',
+            result: null, // TODO: what happened: users, feedback, what worked
+            different: null, // TODO: what you would do differently next time
+        },
     },
     {
         id: 'sgp-net',
         kind: 'ML System',
+        category: 'ai',
         title: 'SGP-NET: Priority Seat Validation',
-        description: 'A real-time monitoring system for public transit priority seating, powered by deep learning and contextual analysis. It identifies violations and delivers automated feedback, promoting a more inclusive and ethical transit environment.',
+        problem: 'Check that priority seats on public transit are used as intended, with automated feedback on violations.',
+        outcome: null, // TODO: accuracy or another real result
+        media: null, // TODO: architecture diagram or demo frame
         specs: [
             { label: 'Task', value: 'Priority-seat validation on public transit' },
             { label: 'Method', value: 'Scene Graph Priority Network' },
@@ -140,26 +200,42 @@ export const PROJECTS: readonly Project[] = [
             { label: 'Output', value: 'Automated feedback on violations' },
         ],
         tags: ['Machine Learning', 'Python', 'Tensorflow', 'SGP-NET'],
-        repoUrl: 'https://github.com/henrysalim/priority-seat-sgp-net',
+        sourceUrl: 'https://github.com/henrysalim/priority-seat-sgp-net',
     },
     {
-        id: 'radioactive-backend',
+        id: 'perkenalan-backend-2026',
         kind: 'Web Backend',
-        title: 'UMN Radioactive 2025',
-        description: 'Backend system for the UMN Radioactive 2025 website.',
+        category: 'web',
+        title: 'Perkenalan Prodi Informatika UMN 2026: Backend',
+        problem: 'Backend for the orientation website of the Informatics program, powering the crossword puzzle and quiz activities for 200+ new students, with rate limiting to keep it reliable under load.',
+        outcome: 'Stable throughout the event',
+        media: {
+            type: 'image',
+            src: 'assets/projects/ppif-2026.jpg',
+            alt: 'Home page of the Perkenalan Prodi Informatika 2026 website: a 3D subway platform with red mascot characters, under a navigation bar with Home, About, Timeline and Contact.',
+            width: 1280,
+            height: 720,
+        },
         specs: [
             { label: 'Role', value: 'Backend Developer' },
-            { label: 'Stack', value: 'Laravel, PHP' },
-            { label: 'Built', value: 'Ticketing system, merchandise management' },
-            { label: 'Period', value: 'Mar 2025 to Nov 2025' },
+            { label: 'Stack', value: 'Laravel, PHP, MySQL' },
+            { label: 'Built', value: 'TTS and quiz backend' },
+            { label: 'Scale', value: '200+ participants' },
+            { label: 'Period', value: 'Jun 2026 to Jul 2026' },
         ],
-        tags: ['Laravel', 'PHP'],
+        tags: ['Laravel', 'PHP', 'MySQL'],
+        demoUrl: 'https://ppif.umn.ac.id',
+        demoLabel: 'Visit Site',
+        // TODO: demoUrl if the site is still online, sourceUrl if the code is public.
     },
     {
         id: 'maze-runner',
         kind: 'Game',
+        category: 'games',
         title: 'Maze Runner',
-        description: 'A small college game development project: a 3D maze game where the player controls a character to navigate through a maze and find the exit.',
+        problem: 'A college game project: control a character through a 3D maze and find the exit.',
+        outcome: null, // TODO: plays, feedback, or another real result
+        media: null, // TODO: gameplay GIF or screenshot
         specs: [
             { label: 'Engine', value: 'Unity' },
             { label: 'Language', value: 'C#' },
@@ -167,24 +243,20 @@ export const PROJECTS: readonly Project[] = [
             { label: 'Origin', value: 'College project' },
         ],
         tags: ['Unity', 'C#', '3D', 'Game Development'],
-        liveUrl: 'https://rascalosh.itch.io/mazerunner',
-        liveLabel: 'Play',
+        demoUrl: 'https://rascalosh.itch.io/mazerunner',
+        demoLabel: 'Play',
     },
+] as const;
+
+export const EXPERIENCE_GROUPS: readonly { readonly id: ExperienceKind; readonly label: string }[] = [
+    { id: 'technical', label: 'Engineering & Teaching' },
+    { id: 'leadership', label: 'Leadership & Organizations' },
 ] as const;
 
 export const EXPERIENCES: readonly Experience[] = [
     {
-        id: 'lab-assistant',
-        role: 'Laboratory Assistant',
-        company: 'Multimedia Nusantara University',
-        duration: 'Feb 2026 to Present',
-        current: true,
-        description: 'Assist students in learning and understanding the concepts of object-oriented programming through practical exercises and interactive sessions.',
-        tags: ['OOP', 'Kotlin', 'Tutoring', 'Problem Solving'],
-        achievements: ['Assisted 80 students in learning OOP concepts', 'Improved student understanding of OOP concepts by 20%'],
-    },
-    {
         id: 'ids-medical',
+        kind: 'technical',
         role: 'Application Developer Intern',
         company: 'IDS Medical Systems Indonesia',
         duration: 'Jan 2026 to Present',
@@ -193,7 +265,33 @@ export const EXPERIENCES: readonly Experience[] = [
         tags: ['Angular', 'TypeScript', 'Node.js', 'Laravel', 'Flutter'],
     },
     {
+        id: 'lab-assistant',
+        kind: 'technical',
+        role: 'Laboratory Assistant',
+        company: 'Multimedia Nusantara University',
+        duration: 'Feb 2026 to May 2026',
+        current: false,
+        description: 'Assist students in learning and understanding the concepts of object-oriented programming through practical exercises and interactive sessions.',
+        tags: ['OOP', 'Kotlin', 'Tutoring', 'Problem Solving'],
+        achievements: ['Assisted 80 students in learning OOP concepts', 'Improved student understanding of OOP concepts by 20%'],
+    },
+    {
+        id: 'perkenalan-backend-2026-role',
+        kind: 'technical',
+        role: 'Backend Developer',
+        company: 'Perkenalan Prodi Informatika UMN 2026',
+        duration: 'Jun 2026 to Jul 2026',
+        description: 'Backend developer for the Perkenalan Prodi Informatika UMN 2026 website. I built the backend for the interactive activities incoming students took part in, including the crossword puzzle (TTS) and quizzes, and implemented rate limiting to keep the system reliable for 200+ participants. The system ran stably throughout the event.',
+        tags: ['Laravel', 'PHP', 'MySQL'],
+        achievements: [
+            'Built the backend for the TTS and quiz activities as the only backend developer',
+            'Implemented rate limiting to handle concurrent traffic from 200+ participants',
+            'System stayed stable throughout the event',
+        ],
+    },
+    {
         id: 'byte-chairman',
+        kind: 'leadership',
         role: 'Chairman',
         company: 'Bringing Your Tech Experience',
         duration: 'Feb 2025 to Dec 2025',
@@ -207,6 +305,7 @@ export const EXPERIENCES: readonly Experience[] = [
     },
     {
         id: 'hmif-vice-head',
+        kind: 'leadership',
         role: 'Vice Head of Division, Project Manager',
         company: 'HMIF UMN',
         duration: 'Dec 2024 to Dec 2025',
@@ -219,19 +318,8 @@ export const EXPERIENCES: readonly Experience[] = [
         ],
     },
     {
-        id: 'radioactive-backend-role',
-        role: 'Backend Developer',
-        company: 'UMN Radioactive 2025',
-        duration: 'Mar 2025 to Nov 2025',
-        description: 'Developed a backend system for the UMN Radioactive 2025 website.',
-        tags: ['Laravel', 'PHP'],
-        achievements: [
-            'Developed a merchandise management system',
-            'Developed a ticketing system',
-        ],
-    },
-    {
         id: 'perkenalan-prodi',
+        kind: 'leadership',
         role: 'Head of Division, Event',
         company: 'Perkenalan Prodi Informatika UMN 2025',
         duration: 'Jan 2025 to Sep 2025',

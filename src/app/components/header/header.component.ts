@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, afterNextRender, inject, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideMenu, lucideMoon, lucideSun } from '@ng-icons/lucide';
-import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { HERO_DATA, NAV_LINKS } from '../../data/portfolio-data';
+import { NAV_LINKS } from '../../data/portfolio-data';
 import { ActiveSectionService } from '../../services/active-section.service';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, HlmBadgeImports, HlmButtonImports, HlmSheetImports],
+  imports: [NgIcon, HlmButtonImports, HlmSheetImports],
   providers: [provideIcons({ lucideMenu, lucideMoon, lucideSun })],
   templateUrl: 'header.html',
 })
@@ -22,7 +21,6 @@ export class HeaderComponent {
   protected readonly isDark = this.theme.isDark;
   protected readonly activeFragment = inject(ActiveSectionService).activeFragment;
   protected readonly navLinks = NAV_LINKS;
-  protected readonly hero = HERO_DATA;
   protected readonly scrolled = signal(false);
 
   constructor() {

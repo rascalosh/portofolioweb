@@ -1,0 +1,34 @@
+<hlm-dialog>
+    <button hlmDialogTrigger hlmBtn variant="outline" size="sm" type="button">
+        Read Case Study<span class="sr-only"> for {{ title() }}</span>
+    </button>
+    <hlm-dialog-content *hlmDialogPortal class="max-h-[85dvh] overflow-y-auto sm:max-w-2xl" closeLabel="Close case study">
+        <hlm-dialog-header>
+            <p class="text-meta text-muted-foreground">Case Study</p>
+            <h3 hlmDialogTitle class="text-2xl font-semibold tracking-tight">{{ title() }}</h3>
+        </hlm-dialog-header>
+
+        <dl class="grid gap-6">
+            <div>
+                <dt class="text-meta text-muted-foreground">Problem</dt>
+                <dd class="mt-1 text-base leading-relaxed">{{ study().problem }}</dd>
+            </div>
+            <div>
+                <dt class="text-meta text-muted-foreground">Approach</dt>
+                <dd class="mt-1 text-base leading-relaxed">{{ study().approach }}</dd>
+            </div>
+            @if (study().result; as result) {
+            <div>
+                <dt class="text-meta text-muted-foreground">Result</dt>
+                <dd class="mt-1 text-base leading-relaxed">{{ result }}</dd>
+            </div>
+            }
+            @if (study().different; as different) {
+            <div>
+                <dt class="text-meta text-muted-foreground">What I Would Do Differently</dt>
+                <dd class="mt-1 text-base leading-relaxed">{{ different }}</dd>
+            </div>
+            }
+        </dl>
+    </hlm-dialog-content>
+</hlm-dialog>

@@ -4,13 +4,30 @@
 <head>
   <meta charset="utf-8">
   <title>Willbert Budi Lian - Full-Stack Developer & AI Engineer</title>
-  <meta name="description" content="Portfolio of Willbert Budi Lian, a full-stack developer and AI engineer">
+  <meta name="description" content="Willbert Budi Lian is a full-stack developer and AI engineer building health-tech software: depression screening models, a mood-journaling Android app and healthcare web applications.">
+  <link rel="canonical" href="https://portofoliowebe.vercel.app/">
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#FBFBFD" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Willbert Budi Lian">
+  <meta property="og:title" content="Willbert Budi Lian - Full-Stack Developer & AI Engineer">
+  <meta property="og:description" content="Willbert Budi Lian is a full-stack developer and AI engineer building health-tech software: depression screening models, a mood-journaling Android app and healthcare web applications.">
+  <meta property="og:url" content="https://portofoliowebe.vercel.app/">
+  <meta property="og:image" content="https://portofoliowebe.vercel.app/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Willbert Budi Lian, full-stack developer and AI engineer, shown on an ID card. Open to internships and full-time roles.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Willbert Budi Lian - Full-Stack Developer & AI Engineer">
+  <meta name="twitter:description" content="Willbert Budi Lian is a full-stack developer and AI engineer building health-tech software: depression screening models, a mood-journaling Android app and healthcare web applications.">
+  <meta name="twitter:image" content="https://portofoliowebe.vercel.app/og.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -22,6 +39,7 @@
       var saved = localStorage.getItem('theme');
       var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
       if (dark) document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('js');
     } catch (e) { }
   </script>
 </head>

@@ -30,9 +30,10 @@
                             <p class="text-sm text-[#A1A1A6]">{{ hero.title }}</p>
                         </div>
                         <p class="text-meta text-[#A1A1A6]">{{ hero.school }}<br>{{ hero.program }}</p>
-                        <p class="text-meta flex items-start gap-2">
-                            <span class="mt-1.5 size-2 shrink-0 rounded-full bg-[#30D158]"></span>{{ hero.status }}
-                        </p>
+                        <p class="text-meta">{{ hero.status }}</p>
+                        @if (hero.now; as now) {
+                        <p class="text-meta"><span class="text-[#A1A1A6]">Now</span> {{ now }}</p>
+                        }
                         <hr class="border-white/15">
                         <p class="text-meta break-all">{{ content.email }}<br>{{ content.github }}<br>{{
                             content.linkedin }}</p>

@@ -38,6 +38,7 @@ export class IdCardComponent {
     school: HERO_DATA.school,
     program: HERO_DATA.program,
     status: HERO_DATA.status,
+    now: HERO_DATA.now,
     email: SOCIAL_LINKS.find((link) => link.label === 'Email')?.displayValue ?? '',
     github: stripProtocol(SOCIAL_LINKS.find((link) => link.label === 'GitHub')?.url ?? ''),
     linkedin: stripProtocol(SOCIAL_LINKS.find((link) => link.label === 'LinkedIn')?.url ?? ''),

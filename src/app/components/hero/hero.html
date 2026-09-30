@@ -2,25 +2,29 @@
     <div class="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.25fr_1fr]">
 
         <div>
-            <!-- Below md the header has no room for availability, so it sits here -->
-            <span hlmBadge variant="outline" class="text-meta mb-6 h-auto gap-2 px-3 py-1 md:hidden">
-                <span class="size-2 shrink-0 rounded-full bg-status" aria-hidden="true"></span>{{ hero.status }}
-            </span>
+            <span hlmBadge variant="outline" class="text-meta mb-6 h-auto px-3 py-1">{{ hero.status }}</span>
 
             <h1 id="hero-heading" class="text-display">{{ hero.name }}</h1>
             <p class="mt-4 text-xl font-medium sm:text-2xl">{{ hero.title }}</p>
             <p class="mt-6 max-w-xl text-lg text-muted-foreground">{{ hero.bio }}</p>
 
+            @if (hero.now; as now) {
+            <p class="mt-5 max-w-xl text-[0.9375rem]">
+                <span class="text-meta mr-2 text-muted-foreground">Now</span>{{ now }}
+            </p>
+            }
+
             <div class="mt-10 flex flex-wrap items-center gap-3">
                 <a hlmBtn size="lg" href="#work">View Projects</a>
                 <a hlmBtn size="lg" variant="outline" href="#contact">Get in Touch</a>
+                <a hlmBtn size="lg" variant="outline" [href]="cvUrl" download>Download CV</a>
             </div>
 
             <ul class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1">
                 @for (link of profileLinks; track link.label) {
                 <li>
                     <a [href]="link.url" target="_blank" rel="noopener noreferrer"
-                        class="inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-medium text-link underline-offset-4 hover:underline">
+                        class="inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-medium underline underline-offset-4 hover:text-muted-foreground">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             class="size-4" aria-hidden="true">
                             <path [attr.d]="link.svgPath" />

@@ -8,14 +8,6 @@
         <a href="#hero" class="-mx-2 flex h-11 items-center px-2 text-lg font-semibold tracking-tight">WB.<span
                 class="sr-only">, Willbert Budi Lian, back to top</span></a>
 
-        <!-- Availability: short text at md, full text from lg. Below md it lives in the hero. -->
-        <span hlmBadge variant="outline" class="text-meta hidden h-7 gap-2 px-3 md:inline-flex lg:hidden">
-            <span class="size-2 rounded-full bg-status" aria-hidden="true"></span>{{ hero.statusShort }}
-        </span>
-        <span hlmBadge variant="outline" class="text-meta hidden h-7 gap-2 px-3 lg:inline-flex">
-            <span class="size-2 rounded-full bg-status" aria-hidden="true"></span>{{ hero.status }}
-        </span>
-
         <nav class="ml-auto hidden items-center gap-1 md:flex" aria-label="Main">
             @for (link of navLinks; track link.fragment) {
             <a [href]="'#' + link.fragment"
@@ -31,9 +23,13 @@
             <ng-icon [name]="isDark() ? 'lucideSun' : 'lucideMoon'" class="text-xl" />
         </button>
 
-        <!-- Below md: Contact stays one tap away; everything else lives in the sheet -->
-        <div class="ml-auto flex items-center gap-2 md:hidden">
+        <!-- Below md: Contact and the theme toggle stay one tap away; sections live in the sheet -->
+        <div class="ml-auto flex items-center gap-1 md:hidden">
             <a hlmBtn variant="outline" size="sm" href="#contact">Contact</a>
+            <button hlmBtn variant="ghost" size="icon" type="button" (click)="toggleTheme()"
+                [attr.aria-label]="isDark() ? 'Switch to light theme' : 'Switch to dark theme'">
+                <ng-icon [name]="isDark() ? 'lucideSun' : 'lucideMoon'" class="text-xl" />
+            </button>
 
             <hlm-sheet #sheet="hlmSheet">
                 <button hlmSheetTrigger side="right" hlmBtn variant="ghost" size="icon" type="button"
@@ -54,12 +50,6 @@
                         </a>
                         }
                     </nav>
-                    <div class="mt-auto p-4">
-                        <button hlmBtn variant="outline" type="button" class="w-full" (click)="toggleTheme()">
-                            <ng-icon [name]="isDark() ? 'lucideSun' : 'lucideMoon'" class="text-xl" />
-                            {{ isDark() ? 'Light Theme' : 'Dark Theme' }}
-                        </button>
-                    </div>
                 </hlm-sheet-content>
             </hlm-sheet>
         </div>

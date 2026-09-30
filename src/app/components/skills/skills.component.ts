@@ -1,39 +1,29 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideArrowUpRight } from '@ng-icons/lucide';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { EXPERIENCES, PROJECTS, SKILLS, SKILL_GROUPS } from '../../data/portfolio-data';
-
-interface Evidence {
-  href: string;
-  where: string;
-}
-
-/** The first project, then role, whose tags name this skill. Skills with no match stay plain text. */
-function evidenceFor(skill: string): Evidence | null {
-  const name = skill.toLowerCase();
-  const project = PROJECTS.find((item) => item.tags.some((tag) => tag.toLowerCase() === name));
-  if (project) return { href: `#project-${project.id}`, where: project.title };
-  const role = EXPERIENCES.find((item) => item.tags.some((tag) => tag.toLowerCase() === name));
-  if (role) return { href: `#experience-${role.id}`, where: `${role.role} at ${role.company}` };
-  return null;
-}
+import { SKILLS, SKILL_LEVELS } from '../../data/portfolio-data';
+import { SkillFocusService } from '../../services/skill-focus.service';
 
 @Component({
   selector: 'app-skills',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIcon, HlmBadgeImports, HlmCardImports],
-  providers: [provideIcons({ lucideArrowUpRight })],
+  imports: [HlmBadgeImports],
   templateUrl: 'skills.html',
 })
 export class SkillsComponent {
-  protected readonly groups = SKILL_GROUPS.map((group, index) => ({
-    ...group,
-    span: index < 3 ? 'lg:col-span-2' : 'lg:col-span-3',
-    skills: SKILLS.filter((skill) => skill.group === group.id).map((skill) => ({
+  protected readonly focus = inject(SkillFocusService);
+  protected readonly total = SKILLS.length;
+
+  protected readonly levels = SKILL_LEVELS.map((level) => ({
+    ...level,
+    skills: SKILLS.filter((skill) => skill.level === level.id).map((skill) => ({
       name: skill.name,
-      evidence: evidenceFor(skill.name),
+      // Only skills that appear in a project or role can be selected; the rest stay plain.
+      usable: this.focus.evidenceFor(skill.name).length > 0,
     })),
   }));
+
+  /** Hover previews for mouse users only. Keyboard and touch users select by pressing. */
+  protected preview(event: PointerEvent, skill: string | null): void {
+    if (event.pointerType === 'mouse') this.focus.preview(skill);
+  }
 }

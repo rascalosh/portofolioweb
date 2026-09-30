@@ -21,7 +21,7 @@
 
 ## Preview
 
-> A single-page portfolio for recruiters: who I am, what I have built, and how to reach me. Monochrome, typography-led, and built on Spartan UI. The hero is a 3D ID card you can hover, drag and flip.
+> A single-page portfolio for recruiters: who I am, what I have built, and how to reach me. Monochrome and typography-led, with one green accent that only ever means "selected". The hero is a 3D ID card you can hover, drag and flip.
 
 ---
 
@@ -29,11 +29,13 @@
 
 | Feature | Description |
 |---|---|
-|**ID card** | A Three.js badge: hover to tilt, drag to turn (it springs to the nearest face), flip to read the back. Without WebGL, or with reduced motion, a static card with a CSS flip is used and Three.js never loads |
-|**System theme** | Follows the system light or dark setting. The toggle overrides it; a choice is saved only while it differs from the system, so matching the system again clears it |
-|**Spartan UI** | Button, card, badge, accordion and sheet, generated into `src/app/ui` and built on Spartan's accessible Brain primitives |
-|**Work grid** | Project cards with a mono spec panel built from the facts in the data file |
-
+| **ID card** | A Three.js badge: hover to tilt, drag to turn, flip to read the back. Without WebGL, or with reduced motion, a static card with a CSS flip is used and Three.js never loads |
+| **Projects** | Category filter (arrow keys, Home, End), a media area per card with a typographic placeholder until you add images or video, and a case study dialog |
+| **Skills by strength** | Strong in, Comfortable with, Familiar with. Hover or press a skill to see, and highlight, the projects and roles that used it |
+| **Experience timeline** | Engineering and teaching roles first, then leadership. Long text is clamped on phones with Read More |
+| **System theme** | Follows the system setting; the toggle overrides it and is saved only while it differs from the system |
+| **Sharing** | Open Graph and Twitter cards, a generated preview image, favicons, robots.txt and llms.txt |
+| **One data file** | All content lives in `portfolio-data.ts`; every `TODO:` in it is for you to fill in |
 
 ---
 
@@ -60,25 +62,20 @@
 
 ```
 latihan-angular/
-├── public/assets/              # Photo (foto-card.jpg is the 1024px version used on the card)
+├── public/                     # og.png, favicons, robots.txt, llms.txt, assets/ (put cv.pdf here)
 ├── components.json             # Spartan CLI config
 ├── src/
-│   ├── index.html              # Fonts and the pre-paint theme script
+│   ├── index.html              # Meta tags, fonts and the pre-paint theme script
 │   ├── styles.css              # Theme variables, type scale, motion and contrast rules
 │   └── app/
-│       ├── app.ts              # Root component
 │       ├── components/
-│       │   ├── header/         # Nav, availability badge, theme toggle, mobile sheet
-│       │   ├── hero/           # Name, role, bio, actions
-│       │   ├── id-card/        # Static card + lazy Three.js scene
-│       │   ├── work/           # Project bento
-│       │   ├── skills/         # Grouped skills linked to evidence
-│       │   ├── experience/     # Accordion
-│       │   ├── contact/        # Copy email and links
-│       │   └── footer/
+│       │   ├── header/  hero/  id-card/      # nav, intro, 3D card
+│       │   ├── work/                         # filter, cards, media area
+│       │   ├── detail-dialog/                # case study dialog
+│       │   ├── skills/  experience/  contact/  footer/
 │       ├── ui/                 # Generated Spartan Helm components (edit freely)
 │       ├── data/portfolio-data.ts
-│       └── services/           # theme.service, active-section.service
+│       └── services/           # theme, active-section, skill-focus
 ```
 
 ---
@@ -128,33 +125,30 @@ npm test
 
 ## 📝 Customization
 
-All portfolio content is centralized in a single file:
+All content is in **[`src/app/data/portfolio-data.ts`](src/app/data/portfolio-data.ts)**. Search for `TODO:` to find what still needs your input.
 
-**[`src/app/data/portfolio-data.ts`](src/app/data/portfolio-data.ts)**
+| What | Where | Notes |
+|---|---|---|
+| CV | `public/cv.pdf` | The "Download CV" buttons already point at `/cv.pdf` |
+| Project images or video | `public/assets/projects/`, then `media` on the project | `{ type, src, alt, width, height, poster? }`; describe the picture in `alt` |
+| Outcomes and metrics | `outcome` on each project | Hidden while `null`; use only real numbers |
+| "Now" line | `HERO_DATA.now` | Shown in the hero and on the card back once set |
+| Case study copy | `caseStudy.result` and `caseStudy.different` | Sections appear once filled |
+| Skill grouping | `SKILLS[].level` | `strong`, `comfortable` or `familiar`; the first draft needs your review |
 
-| Data Export | Description |
-|---|---|
-| `HERO_DATA` | Name, title, bio, school, availability text |
-| `SKILL_GROUPS` / `SKILLS` | Skill groups and skills |
-| `PROJECTS` | Project cards: kind, description, spec panel facts, tags, links |
-| `EXPERIENCES` | Accordion entries; `current: true` opens by default |
-| `SOCIAL_LINKS` | GitHub, LinkedIn and email shown on the page |
-| `UNLISTED_LINKS` | Contact channels kept but not shown |
-| `NAV_LINKS` | Header navigation |
-
-To add another Spartan component: `npx ng g @spartan-ng/cli:ui <name>` (generated into `src/app/ui`).
+To add another Spartan component: `npx ng g @spartan-ng/cli:ui <name>`.
 
 ---
 
 ## ♿ Accessibility
 
-- ✅ **Semantics** — one `<h1>`, labelled sections, skip link, current section marked with `aria-current`
-- ✅ **Keyboard** — nothing is hijacked (arrow keys scroll normally); the card takes ← / → to turn and Enter or Space to flip; the menu closes with Esc and returns focus
-- ✅ **Contrast** — WCAG AA in both themes (muted text 4.9:1 light, 7.7:1 dark; link and focus blue 5.4:1 light, 6.5:1 dark), and darker text and solid borders under Increase Contrast
-- ✅ **Motion** — no looping animation; `prefers-reduced-motion` removes transitions and keeps the card static
-- ✅ **Transparency** — the header blur is replaced by a solid bar under `prefers-reduced-transparency`
-- ✅ **Touch targets** — 44 px minimum for buttons and links, with larger tap areas on skill links
-- ✅ **Text size** — type and breakpoints are in `rem`, so the layout follows the browser's font size
+- **Semantics**: one `<h1>`, labelled sections, skip link, current section marked with `aria-current`
+- **Keyboard**: nothing is hijacked; filter chips take arrow keys; the card takes Enter, Space and the arrow keys; dialogs and the menu close with Esc and return focus
+- **Contrast**: WCAG AA in both themes, darker text and solid borders under Increase Contrast
+- **Motion**: no looping animation; `prefers-reduced-motion` removes transitions, scroll reveals and view transitions, and keeps the card static
+- **Transparency**: the header blur becomes a solid bar under `prefers-reduced-transparency`
+- **Touch targets**: 44 px minimum for buttons and links
+- **Text size**: type and breakpoints are in `rem`, so the layout follows the browser's font size
 
 ---
 

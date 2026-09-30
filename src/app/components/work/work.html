@@ -1,69 +1,83 @@
-<section id="work" class="px-6 py-16 md:py-24" aria-labelledby="work-heading">
+<section id="work" class="section-y px-6" aria-labelledby="work-heading">
     <div class="mx-auto max-w-6xl">
-        <h2 id="work-heading" class="text-heading">Selected Work</h2>
-        <p class="mt-3 max-w-xl text-muted-foreground">Research, apps and systems I have built, with the stack and role behind each.</p>
+        <p class="text-meta text-muted-foreground">Work · {{ count() }}</p>
+        <h2 id="work-heading" class="text-heading mt-3">Selected Work</h2>
 
-        <div class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-            @for (item of projects; track item.project.id) {
-            <div [class]="item.span">
-            <article hlmCard [id]="'project-' + item.project.id" class="h-full">
-                <div hlmCardHeader>
-                    <p class="text-meta text-muted-foreground">{{ item.project.kind }}</p>
-                    <h3 hlmCardTitle class="mt-1 text-xl font-semibold tracking-tight">{{ item.project.title }}</h3>
-                    <p class="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">{{ item.project.description }}</p>
-                </div>
+        <hlm-toggle-group type="single" [value]="filter()" (valueChange)="setFilter($event)" (keydown)="onFilterKey($event)" [spacing]="2"
+            class="mt-8 flex-wrap" aria-label="Filter projects by category">
+            @for (item of filters; track item.id) {
+            <button hlmToggleGroupItem [value]="item.id" type="button" [attr.tabindex]="filter() === item.id ? 0 : -1"
+                class="h-11 rounded-full border px-5 text-[0.9375rem] font-medium data-[state=on]:border-transparent data-[state=on]:bg-active data-[state=on]:text-white dark:data-[state=on]:text-background">
+                {{ item.label }}
+            </button>
+            }
+        </hlm-toggle-group>
+        <p class="sr-only" aria-live="polite">Showing {{ count() }}</p>
 
-                <div hlmCardContent class="mt-auto">
-                    <dl class="text-meta grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 rounded-lg bg-muted p-4">
-                        @for (spec of item.project.specs; track spec.label) {
+        <div class="mt-10 grid gap-4 md:grid-cols-2">
+            @for (project of visible(); track project.id) {
+            <article hlmCard [id]="'project-' + project.id"
+                class="group/card h-full gap-0 py-0 transition-shadow duration-300 hover:ring-foreground/25 data-[highlighted]:ring-2 data-[highlighted]:ring-active"
+                [attr.data-highlighted]="isHighlighted(project.id) ? '' : null"
+                [style.view-transition-name]="'project-' + project.id">
+                <app-project-media [media]="project.media" [mark]="mark(project.category)" />
+
+                <div class="flex flex-1 flex-col gap-5 p-6">
+                    <div>
+                        <p class="text-meta text-muted-foreground">{{ project.kind }}</p>
+                        <h3 class="mt-1 text-xl font-semibold tracking-tight">{{ project.title }}</h3>
+                        <p class="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">{{ project.problem }}</p>
+                    </div>
+
+                    @if (project.outcome; as outcome) {
+                    <p class="text-[0.9375rem] font-medium">
+                        <span class="text-meta block font-normal text-muted-foreground">Outcome</span>{{ outcome }}
+                    </p>
+                    }
+
+                    <dl class="text-meta mt-auto grid grid-cols-[auto_1fr] gap-x-5 gap-y-1.5 rounded-lg bg-muted p-4">
+                        @for (spec of project.specs; track spec.label) {
                         <dt class="text-muted-foreground">{{ spec.label }}</dt>
                         <dd>{{ spec.value }}</dd>
                         }
                     </dl>
-                    <ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags">
-                        @for (tag of item.project.tags; track tag) {
+
+                    <ul class="flex flex-wrap gap-2" aria-label="Tags">
+                        @for (tag of project.tags; track tag) {
                         <li><span hlmBadge variant="outline" class="text-meta h-6 px-2.5">{{ tag }}</span></li>
                         }
                     </ul>
-                </div>
 
-                @if (item.project.repoUrl || item.project.liveUrl) {
-                <div hlmCardFooter class="gap-2">
-                    @if (item.project.repoUrl) {
-                    <a hlmBtn variant="outline" size="sm" [href]="item.project.repoUrl" target="_blank"
-                        rel="noopener noreferrer">
-                        Source<ng-icon name="lucideArrowUpRight" data-icon="inline-end" />
-                        <span class="sr-only"> for {{ item.project.title }} (opens in a new tab)</span>
-                    </a>
-                    }
-                    @if (item.project.liveUrl) {
-                    <a hlmBtn variant="outline" size="sm" [href]="item.project.liveUrl" target="_blank"
-                        rel="noopener noreferrer">
-                        {{ item.project.liveLabel ?? 'Live Demo' }}<ng-icon name="lucideArrowUpRight"
-                            data-icon="inline-end" />
-                        <span class="sr-only"> {{ item.project.title }} (opens in a new tab)</span>
-                    </a>
+                    @if (project.sourceUrl || project.demoUrl || project.caseStudy) {
+                    <div class="flex flex-wrap gap-2">
+                        @if (project.caseStudy; as study) {
+                        <app-case-study [title]="project.title" [study]="study" />
+                        }
+                        @if (project.demoUrl) {
+                        <a hlmBtn variant="outline" size="sm" [href]="project.demoUrl" target="_blank"
+                            rel="noopener noreferrer">
+                            {{ project.demoLabel ?? 'Live Demo' }}<ng-icon name="lucideArrowUpRight" data-icon="inline-end" />
+                            <span class="sr-only"> {{ project.title }} (opens in a new tab)</span>
+                        </a>
+                        }
+                        @if (project.sourceUrl) {
+                        <a hlmBtn variant="outline" size="sm" [href]="project.sourceUrl" target="_blank"
+                            rel="noopener noreferrer">
+                            Source<ng-icon name="lucideArrowUpRight" data-icon="inline-end" />
+                            <span class="sr-only"> for {{ project.title }} (opens in a new tab)</span>
+                        </a>
+                        }
+                    </div>
                     }
                 </div>
-                }
             </article>
-            </div>
             }
-
-            <div class="md:col-span-2 lg:col-span-3">
-            <a hlmCard [href]="github.url" target="_blank" rel="noopener noreferrer"
-                class="h-full justify-between transition-colors duration-200 hover:bg-muted">
-                <div hlmCardHeader>
-                    <p class="text-meta text-muted-foreground">{{ github.displayValue }}</p>
-                    <h3 hlmCardTitle class="mt-1 text-xl font-semibold tracking-tight">More on GitHub</h3>
-                    <p class="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">All of my public repositories, including the ones not featured here.</p>
-                </div>
-                <div hlmCardContent class="flex items-center gap-2 font-medium text-link">
-                    github.com/{{ github.displayValue }}<ng-icon name="lucideArrowUpRight" class="text-lg" />
-                    <span class="sr-only">(opens in a new tab)</span>
-                </div>
-            </a>
-            </div>
         </div>
+
+        <a [href]="github.url" target="_blank" rel="noopener noreferrer"
+            class="mt-8 inline-flex min-h-11 items-center gap-2 font-medium underline underline-offset-4 hover:text-muted-foreground">
+            All repositories on GitHub<ng-icon name="lucideArrowUpRight" class="text-lg" />
+            <span class="sr-only">(opens in a new tab)</span>
+        </a>
     </div>
 </section>

@@ -23,6 +23,8 @@ export interface CardContent {
   school: string;
   program: string;
   status: string;
+  /** What you are working on now; the back shows it only when set. */
+  now: string | null;
   email: string;
   github: string;
   linkedin: string;
@@ -53,7 +55,7 @@ const DRAG_RADIANS_PER_PX = 0.0085;
 const DRAG_TILT_LIMIT = 0.6;
 const MAX_SPIN = 20;
 const REST = 0.0008;
-const COLORS = { ink: '#1D1D1F', muted: '#6E6E73', paper: '#FFFFFF', slot: '#E5E5EA', backdrop: '#1D1D1F', onDark: '#F5F5F7', mutedOnDark: '#A1A1A6', status: '#30D158' };
+const COLORS = { ink: '#1D1D1F', muted: '#6E6E73', paper: '#FFFFFF', slot: '#E5E5EA', backdrop: '#1D1D1F', onDark: '#F5F5F7', mutedOnDark: '#A1A1A6' };
 
 export async function createCardScene(options: CardSceneOptions): Promise<CardScene> {
   const { container, photoUrl, content, onFace, onLost } = options;
@@ -425,13 +427,16 @@ function drawBack(content: CardContent): HTMLCanvasElement {
   ctx.fillText(content.school, left, 800);
   ctx.fillText(content.program, left, 856);
 
-  ctx.fillStyle = COLORS.status;
-  ctx.beginPath();
-  ctx.arc(left + 10, 982, 11, 0, Math.PI * 2);
-  ctx.fill();
   ctx.fillStyle = COLORS.onDark;
   ctx.font = `400 36px ${MONO}`;
-  ctx.fillText(content.status, left + 38, 994);
+  ctx.fillText(fitText(ctx, content.status, width - left * 2), left, 994);
+
+  if (content.now) {
+    ctx.fillStyle = COLORS.mutedOnDark;
+    ctx.fillText('Now', left, 1064);
+    ctx.fillStyle = COLORS.onDark;
+    ctx.fillText(fitText(ctx, content.now, width - left * 2 - 110), left + 110, 1064);
+  }
 
   ctx.strokeStyle = 'rgba(245,245,247,0.16)';
   ctx.lineWidth = 2;
@@ -446,6 +451,14 @@ function drawBack(content: CardContent): HTMLCanvasElement {
   ctx.fillText(content.github, left, 1336);
   ctx.fillText(content.linkedin, left, 1400);
   return canvas;
+}
+
+/** Trims text with an ellipsis so it fits a width. */
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let trimmed = text;
+  while (trimmed.length > 1 && ctx.measureText(trimmed + '…').width > maxWidth) trimmed = trimmed.slice(0, -1);
+  return trimmed + '…';
 }
 
 function pathRoundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number): void {

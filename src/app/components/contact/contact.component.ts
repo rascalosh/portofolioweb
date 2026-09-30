@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, i
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideCheck, lucideCopy } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { SOCIAL_LINKS } from '../../data/portfolio-data';
+import { CV_URL, HERO_DATA, SOCIAL_LINKS } from '../../data/portfolio-data';
 
 const IDLE_LABEL = 'Copy Email';
 const RESET_MS = 2000;
@@ -17,6 +17,8 @@ const RESET_MS = 2000;
 export class ContactComponent {
   private readonly emailElement = viewChild.required<ElementRef<HTMLElement>>('emailText');
 
+  protected readonly status = HERO_DATA.status;
+  protected readonly cvUrl = CV_URL;
   protected readonly email = SOCIAL_LINKS.find((link) => link.label === 'Email')!;
   protected readonly profileLinks = SOCIAL_LINKS.filter((link) => link.label !== 'Email');
 
